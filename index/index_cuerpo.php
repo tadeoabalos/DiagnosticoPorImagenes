@@ -75,22 +75,44 @@
     </section>
     <section id="services" class="services text-center">
         <div class="container">
-            <h2>Nuestros Servicios</h2>
-            <p>Ofrecemos una variedad de servicios radiológicos, adaptados a las necesidades de cada paciente.</p>
+                    <h2>Nuestros Servicios</h2>
+                    <p>Ofrecemos una variedad de servicios radiológicos, adaptados a las necesidades de cada paciente.</p>
+                    <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h4>Rayos X</h4>
-                    <p>Diagnóstico preciso con tecnología avanzada.</p>
+                    <h4>Radiología</h4>
+                    <p>Diagnóstico por imágenes para detección y análisis.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Ecografía</h4>
+                    <p>Procedimiento seguro y sin radiación para exámenes detallados.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Ecografía Doppler</h4>
+                    <p>Imágenes en tiempo real para estudiar el flujo sanguíneo.</p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <h4>Mamografía</h4>
+                    <p>Evaluación especializada para el diagnóstico de mamas.</p>
                 </div>
                 <div class="col-md-4">
                     <h4>Resonancia Magnética</h4>
                     <p>Imágenes detalladas para evaluaciones complejas.</p>
                 </div>
                 <div class="col-md-4">
-                    <h4>Ecografías</h4>
-                    <p>Procedimientos rápidos y seguros.</p>
+                    <h4>Estudios Cardiológicos</h4>
+                    <p>Exámenes especializados para la salud cardíaca.</p>
                 </div>
-            </div>        
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h4>Imágenes Dentales</h4>
+                    <p>Diagnóstico dental mediante imágenes precisas.</p>
+                </div>
+            </div>
+        </div>
         </div>
     </section>
     <footer id="contact" class="footer text-center">
