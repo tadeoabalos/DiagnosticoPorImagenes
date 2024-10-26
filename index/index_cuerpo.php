@@ -47,7 +47,8 @@
                     <li class="nav-item"><a class="nav-link" href="#gallery">Galería</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contacto</a></li>
                 </ul>
-                <a href="#appointment" class="btn btn-appointment ms-3">Pedir un turno</a>
+                <a href="../alta_turno/alta_turno_form.php" class="btn btn-primary">Pedir un turno</a>
+                <a href="../login/login.php" class="btn btn-secondary" style="margin-left: 5px;">Acceso Profesional</a>                
             </div>
         </div>
     </header>
