@@ -50,8 +50,7 @@
             <div class="mb-3">
                 <label for="time" class="form-label">Hora</label>
                 <select class="form-select" id="time" name="time" required>            
-                    <option value="08:00">08:00</option>
-                    <option value="08:30">08:30</option>            
+                    <option hidden selected value="">Seleccione una hora</option>                        
                 </select>
             </div>
             <button type="submit" class="btn btn-primary w-100">Confirmar Turno</button>
