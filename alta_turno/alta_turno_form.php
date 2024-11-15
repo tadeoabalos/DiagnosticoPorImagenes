@@ -83,7 +83,7 @@
         }
         
         flatpickr("#date", {
-            dateFormat: "d-m-Y",
+            dateFormat: "Y-m-d",
             minDate: "today",
             maxDate: new Date().fp_incr(30),
             disable: [

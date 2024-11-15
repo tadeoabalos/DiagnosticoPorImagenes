@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['user_name'] = $usuario['nombre'];
         $_SESSION['rol_id'] = $usuario['rol_id'];
         
-        header("Location: ../alta/alta.php");
+        header("Location: index_profesionales.php");
         exit();
     } else {
         $error = "Email o contraseña incorrectos.";
