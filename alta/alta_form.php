@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
-
 <?php
 $pageTitle = 'Alta de Usuario Administrativo';
 include '../utils/header.php';
+session_start();
 ?>
 
-<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <div class="card shadow p-4 col-10 col-md-8 col-lg-6 col-xl-4">
-        <h2 class="text-center mb-4">Alta de Usuario</h2>
+<div class="container d-flex justify-content-center">
+    <div class="form-container card col-10 col-md-8 col-lg-6 col-xl-4">
+        <h2 class="text-center">Alta de Usuario</h2>
 
-        <!-- Mostrar mensaje de exito encima del formulario -->
         <?php if (isset($_SESSION['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <?php echo $_SESSION['success']; ?>
@@ -19,7 +16,6 @@ include '../utils/header.php';
             <?php unset($_SESSION['success']); ?>
         <?php endif; ?>
 
-        <!-- Mostrar mensaje de error -->
         <?php if (isset($_SESSION['error'])): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <?php echo $_SESSION['error']; ?>
@@ -53,8 +49,6 @@ include '../utils/header.php';
         </form>
         <a href="../login/login.php" class="d-block text-center mt-3 text-primary">Logueate</a>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </div>
 
-</html>
+<?php include '../utils/footer.php'; ?>

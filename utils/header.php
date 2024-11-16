@@ -27,7 +27,7 @@
                     <li class="nav-item me-3"><a class="nav-link" href="../index/index.php#gallery">Galería</a></li>
                     <li class="nav-item me-3"><a class="nav-link" href="../index/index.php#contact">Contacto</a></li>
                 </ul>
-                <a href="../alta_turno/alta_turno_form.php" class="btn btn-primary me-3">Pedir un turno</a>
+                <a href="../login/login_form.php" class="btn btn-primary me-3">Acceso Paciente</a>
                 <a href="../alta/alta_form.php" class="btn btn-secondary">Acceso Profesional</a>
             </div>
         </div>

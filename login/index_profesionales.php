@@ -10,7 +10,6 @@
     <div class="container">
         <header>
             <h1>Index de Profesionales</h1>            
-        </header>                
-        <
+        </header>                        
 </body>
 </html>

@@ -2,8 +2,8 @@
 <html lang="es">
 
 <?php
-$pageTitle = 'Iniciar Sesión';
-include '../utils/header.php';
+    $pageTitle = 'Iniciar Sesión';
+    include '../utils/header.php';
 ?>
 
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
@@ -24,10 +24,11 @@ include '../utils/header.php';
             <div class="mb-3">
                 <label for="contraseña" class="form-label">Contraseña:</label>
                 <input type="password" id="contraseña" name="contraseña" class="form-control" required>
+                <a href="#" class="text-decoration-none" style="margin-top: 50px;">¿Olvidaste tu contraseña?</a>        
             </div>
-            <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar Sesión</button>
+                <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar Sesión</button>
             <div class="text-center">
-                <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+                <span>¿No tenes cuenta?</span><a href="../alta/alta_paciente_form.php">Regístrate</a>
             </div>
         </form>
     </div>
