@@ -20,15 +20,13 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+        
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item me-3"><a class="nav-link" href="../index/index.php">Inicio</a></li>
-                    <li class="nav-item me-3"><a class="nav-link" href="../index/index.php#services">Servicios</a></li>
-                    <li class="nav-item me-3"><a class="nav-link" href="../index/index.php#gallery">Galería</a></li>
-                    <li class="nav-item me-3"><a class="nav-link" href="../index/index.php#contact">Contacto</a></li>
-                </ul>
-                <a href="../login/login_form.php" class="btn btn-primary me-3">Acceso Paciente</a>
-                <a href="../login/login_empleados_form.php" class="btn btn-secondary">Acceso Profesional</a>
+                <div class="ms-auto d-flex align-items-center">
+                    <span class="text-white me-3">Bienvenido, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</span>
+                    <a href="../logout.php" class="btn btn-danger">Cerrar Sesión</a>
+                </div>
             </div>
         </div>
     </header>
+</body>
