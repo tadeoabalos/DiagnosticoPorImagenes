@@ -10,11 +10,21 @@ $sql = "SELECT * FROM especializacion";
 $resultado = mysqli_query($conexion, $sql);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $_SESSION['service'] = $_POST['service'];
+    // Obtener datos de la especialidad seleccionada
+    $especializacion_id = $_POST['service'];
+    $sql_especializacion = "SELECT nombre FROM especializacion WHERE id_especializacion = $especializacion_id";
+    $resultado_especializacion = mysqli_query($conexion, $sql_especializacion);
+    
+    if ($resultado_especializacion && $row = mysqli_fetch_assoc($resultado_especializacion)) {
+        $_SESSION['service'] = $especializacion_id;
+        $_SESSION['service_name'] = $row['nombre']; // Guardar el nombre de la especialidad
+    }
+
     $_SESSION['appointment_date'] = $_POST['appointment_date'];
     header("Location: seleccionar_hora.php"); 
     exit();
 }
+
 ?>
 
 <!DOCTYPE html>

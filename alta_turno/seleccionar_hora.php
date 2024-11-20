@@ -6,9 +6,9 @@
         die("Error al conectar con la base de datos: " . mysqli_connect_error());
     }
     $especializacion = isset($_SESSION['service']) ? $_SESSION['service'] : null;
+    $nombre_especializacion = isset($_SESSION['service_name']) ? $_SESSION['service_name'] : null;
     $fecha_turno = isset($_SESSION['appointment_date']) ? $_SESSION['appointment_date'] : null;
-    echo $especializacion;
-    echo $fecha_turno;
+
     $horarios_disponibles = [];
 
     $consulta_horarios = "SELECT * FROM horarios_turno";
@@ -45,7 +45,7 @@
         <?php include '../utils/header_index_usuarios.php'; ?>
         <div class="container my-5">
             <h2 class="text-center mb-4">Seleccionar Hora</h2>
-            <p class="text-center">Seleccione un horario disponible para su turno.</p>
+            <p class="text-center">Turnos disponibles para <strong><?php echo $nombre_especializacion; ?></strong> en la fecha <strong><?php echo htmlspecialchars($fecha_turno); ?></strong>.</p>
         </div>
 
         <form id="appointmentForm" action="procesar_turno.php" method="POST" class="mx-auto" style="max-width: 600px;">
