@@ -49,7 +49,7 @@ include '../utils/header.php';
                 //     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 //         echo "<tr>";
                 //         echo "<td class='text-center'>";
-                //         echo "<button class='btn btn-sm btn-outline-primary' id='view_turno' title='Ver Turno' data-bs-toggle="modal" data-bs-target="#modal_turno" data-turno='" . htmlspecialchars($row['id']) . "'><i class='fas fa-eye'></i></button>";
+                //         echo "<button class='btn btn-sm btn-outline-primary' id='view_turno' title='Ver Turno' data-bs-toggle='modal' data-bs-target='#modal_turno' data-name='" . htmlspecialchars($row['usuario_nombre']) . "'><i class='fas fa-eye'></i></button>";
                 //         echo "</td>";
                 //         echo "<td>" . htmlspecialchars($row['usuario_nombre']) . "</td>";
                 //         echo "<td>" . htmlspecialchars($row['fecha_turno']) . "</td>";
