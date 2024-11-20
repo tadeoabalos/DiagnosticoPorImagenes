@@ -5,12 +5,10 @@ $conexion = mysqli_connect("localhost", "root", "", "radiologia_db");
 if (!$conexion) {
     die("Error al conectar con la base de datos: " . mysqli_connect_error());
 }
-
 $sql = "SELECT * FROM especializacion";
 $resultado = mysqli_query($conexion, $sql);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtener datos de la especialidad seleccionada
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {    
     $especializacion_id = $_POST['service'];
     $sql_especializacion = "SELECT nombre FROM especializacion WHERE id_especializacion = $especializacion_id";
     $resultado_especializacion = mysqli_query($conexion, $sql_especializacion);
@@ -24,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: seleccionar_hora.php"); 
     exit();
 }
+
+
 
 ?>
 
@@ -91,18 +91,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php include '../utils/footer.php'; ?>
     </footer>
 
-    <script>
-        flatpickr("#appointment_date", {
-            minDate: "today",
-            maxDate: new Date().fp_incr(15),
-            disable: [
-                function(date) { 
-                    return (date.getDay() === 0 || date.getDay() === 6); 
-                }
-            ],
-            dateFormat: "Y-m-d",
+<script>
+    function updateDisabledDates(especialidadId) {
+    fetch('get_disabled_dates.php?especialidad_id=' + especialidadId)
+        .then(response => response.json())
+        .then(disabledDates => {
+            flatpickr("#appointment_date", {
+                disable: [
+                    ...disabledDates,
+                    function(date) { 
+                        return (date.getDay() === 0 || date.getDay() === 6);
+                    }
+                ],
+            });
         });
-    </script>
+    }
+
+
+    document.querySelector('#service').addEventListener('change', function() {
+        const especialidadId = this.value;
+        updateDisabledDates(especialidadId);
+    });
+</script>
+
 </body>
 </html>
 <style>
