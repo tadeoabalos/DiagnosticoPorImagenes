@@ -41,53 +41,6 @@ include '../utils/header.php';
                 </tr>
             </thead>
             <tbody id="tbody_pacientes">
-                <tr>
-                    <td style="vertical-align: middle;" class="text-center">
-                        <button class="btn btn-sm btn-outline-primary" id="view_turno" title="Ver Turno" data-bs-toggle="modal" data-bs-target="#modal_turno" data-turno="1">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                    <td style="vertical-align: middle;" class="text-center">Juan Pérez</td>
-                    <td style="vertical-align: middle;" class="text-center">2024-11-20 15:00</td>
-                    <td style="vertical-align: middle;" class="text-center">Cardiología</td>
-                    <td style="vertical-align: middle;" class="text-center">
-                        <button class="btn btn-sm btn-success" id="add_button" title="Subir datos" data-bs-toggle="modal" data-bs-target="#modal_add_rad">
-                            <i class="fas fa-upload"></i> Subir
-                        </button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td style="vertical-align: middle;" class="text-center">
-                        <button class="btn btn-sm btn-outline-primary" id="view_turno" title="Ver Turno" data-bs-toggle="modal" data-bs-target="#modal_turno" data-turno="2">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                    <td style="vertical-align: middle;" class="text-center">Ana Gómez</td>
-                    <td style="vertical-align: middle;" class="text-center">2024-11-21 09:30</td>
-                    <td style="vertical-align: middle;" class="text-center">Neurología</td>
-                    <td style="vertical-align: middle;" class="text-center">
-                        <button class="btn btn-sm btn-success" id="add_button" title="Subir datos" data-bs-toggle="modal" data-bs-target="#modal_add_rad">
-                            <i class="fas fa-upload"></i> Subir
-                        </button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td style="vertical-align: middle;" class="text-center">
-                        <button class="btn btn-sm btn-outline-primary" id="view_turno" title="Ver Turno" data-bs-toggle="modal" data-bs-target="#modal_turno" data-turno="3">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                    <td style="vertical-align: middle;" class="text-center">Carlos Ruiz</td>
-                    <td style="vertical-align: middle;" class="text-center">2024-11-22 11:00</td>
-                    <td style="vertical-align: middle;" class="text-center">Dermatología</td>
-                    <td style="vertical-align: middle;" class="text-center">
-                        <button class="btn btn-sm btn-success" id="add_button" title="Subir datos" data-bs-toggle="modal" data-bs-target="#modal_add_rad">
-                            <i class="fas fa-upload"></i> Subir
-                        </button>
-                    </td>
-                </tr>
                 <?php
                 // $stmt = $pdo->prepare("SELECT ..."); //
                 // $stmt->execute();
@@ -141,8 +94,6 @@ include '../utils/header.php';
             <div class="modal-header">
                 <h5 class="modal-title w-100 text-center" id="modal-add-label">
                     Subir Radiolog&iacute;a:
-                    <!-- <?php //echo htmlspecialchars($idTurno); 
-                            ?> -->
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
