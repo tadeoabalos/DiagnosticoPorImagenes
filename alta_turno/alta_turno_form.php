@@ -53,8 +53,7 @@ $fechasOcupadas = ['2024-11-01', '2024-11-05', '2024-11-10'];
         </div>
         <button type="submit" id="appointmentForm" class="btn btn-primary w-100">Confirmar Turno</button>
     </form>
-
-    <!-- Modal de sesión -->
+    
     <div class="modal fade" id="sessionModal" tabindex="-1" aria-labelledby="sessionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

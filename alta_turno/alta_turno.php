@@ -5,8 +5,16 @@ $conexion = mysqli_connect("localhost", "root", "", "radiologia_db");
 if (!$conexion) {
     die("Error al conectar con la base de datos: " . mysqli_connect_error());
 }
+
 $sql = "SELECT * FROM especializacion";
 $resultado = mysqli_query($conexion, $sql);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $_SESSION['service'] = $_POST['service'];
+    $_SESSION['appointment_date'] = $_POST['appointment_date'];
+    header("Location: seleccionar_hora.php"); 
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +23,8 @@ $resultado = mysqli_query($conexion, $sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedir Turno</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
     <?php include '../utils/header_index_usuarios.php'; ?>
@@ -22,7 +32,7 @@ $resultado = mysqli_query($conexion, $sql);
         <h2 class="text-center mb-4">Reservar Turno</h2>
         <p class="text-center">Complete el formulario para reservar un turno en nuestra clínica.</p>
     </div>
-    <form id="appointmentForm" action="procesar_turno.php" method="POST" class="mx-auto" style="max-width: 600px;">
+    <form id="appointmentForm" action="alta_turno.php" method="POST" class="mx-auto" style="max-width: 600px;">
         <div class="flex-input">
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre</label>
@@ -48,7 +58,7 @@ $resultado = mysqli_query($conexion, $sql);
                 <?php 
                 if ($resultado && mysqli_num_rows($resultado) > 0) {
                     while ($row = mysqli_fetch_assoc($resultado)) {
-                        echo "<option value='" . $row['nombre'] . "'>" . $row['nombre'] . "</option>";
+                        echo "<option value='" . $row['id_especializacion'] . "'>" . $row['nombre'] . "</option>";
                     }
                 } else {
                     echo "<option value=''>No hay especialidades disponibles</option>";
@@ -56,13 +66,35 @@ $resultado = mysqli_query($conexion, $sql);
                 ?>
             </select>
         </div>
+
+        <div class="mb-3">
+            <label for="appointment_date" class="form-label">Fecha de Turno</label>
+            <input type="text" id="appointment_date" name="appointment_date" class="form-control" placeholder="Seleccione una fecha" required>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Siguiente</button>
+        </div>
     </form>
+
     <footer>
         <?php include '../utils/footer.php'; ?>
     </footer>
+
+    <script>
+        flatpickr("#appointment_date", {
+            minDate: "today",
+            maxDate: new Date().fp_incr(15),
+            disable: [
+                function(date) { 
+                    return (date.getDay() === 0 || date.getDay() === 6); 
+                }
+            ],
+            dateFormat: "Y-m-d",
+        });
+    </script>
 </body>
 </html>
-
 <style>
     .flex-input {
         display: flex;
@@ -72,7 +104,6 @@ $resultado = mysqli_query($conexion, $sql);
         gap: 5px;
     }
 </style>
-
 <?php
     mysqli_close($conexion);
 ?>
