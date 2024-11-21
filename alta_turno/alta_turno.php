@@ -1,6 +1,6 @@
 <?php
 session_start();
-$mostrar_modal = !isset($_SESSION['usuario']);    
+$mostrar_modal = !isset($_SESSION['usuario']);
 $conexion = mysqli_connect("localhost", "root", "", "radiologia_db");
 if (!$conexion) {
     die("Error al conectar con la base de datos: " . mysqli_connect_error());
@@ -8,36 +8,27 @@ if (!$conexion) {
 $sql = "SELECT * FROM especializacion";
 $resultado = mysqli_query($conexion, $sql);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {    
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $especializacion_id = $_POST['service'];
     $sql_especializacion = "SELECT nombre FROM especializacion WHERE id_especializacion = $especializacion_id";
     $resultado_especializacion = mysqli_query($conexion, $sql_especializacion);
-    
+
     if ($resultado_especializacion && $row = mysqli_fetch_assoc($resultado_especializacion)) {
         $_SESSION['service'] = $especializacion_id;
         $_SESSION['service_name'] = $row['nombre']; // Guardar el nombre de la especialidad
     }
 
     $_SESSION['appointment_date'] = $_POST['appointment_date'];
-    header("Location: seleccionar_hora.php"); 
+    header("Location: seleccionar_hora.php");
     exit();
 }
 
-
-
+$pageTitle = 'Pedir Turno';
+include '../utils/header_index_usuarios.php'; 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedir Turno</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-</head>
 <body>
-    <?php include '../utils/header_index_usuarios.php'; ?>
+    
     <div class="container my-5">
         <h2 class="text-center mb-4">Reservar Turno</h2>
         <p class="text-center">Complete el formulario para reservar un turno en nuestra clínica.</p>
@@ -52,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="surname" class="form-label">Apellido</label>
                 <input value="<?php echo htmlspecialchars($_SESSION['user_surname']); ?>" type="text" class="form-control" id="surname" name="surname" disabled>
             </div>
-        </div>    
+        </div>
         <div class="mb-3">
             <label for="phone" class="form-label">Teléfono</label>
             <input value="<?php echo htmlspecialchars($_SESSION['user_tel']); ?>" type="number" class="form-control" id="phone" name="phone" disabled>
@@ -65,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="service" class="form-label">Especialidad</label>
             <select class="form-select" id="service" name="service" required>
                 <option value="">Seleccione una especialidad</option>
-                <?php 
+                <?php
                 if ($resultado && mysqli_num_rows($resultado) > 0) {
                     while ($row = mysqli_fetch_assoc($resultado)) {
                         echo "<option value='" . $row['id_especializacion'] . "'>" . $row['nombre'] . "</option>";
@@ -91,30 +82,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php include '../utils/footer.php'; ?>
     </footer>
 
-<script>
-    function updateDisabledDates(especialidadId) {
-    fetch('get_disabled_dates.php?especialidad_id=' + especialidadId)
-        .then(response => response.json())
-        .then(disabledDates => {
-            flatpickr("#appointment_date", {
-                disable: [
-                    ...disabledDates,
-                    function(date) { 
-                        return (date.getDay() === 0 || date.getDay() === 6);
-                    }
-                ],
-            });
+    <script>
+        function updateDisabledDates(especialidadId) {
+            fetch('get_disabled_dates.php?especialidad_id=' + especialidadId)
+                .then(response => response.json())
+                .then(disabledDates => {
+                    flatpickr("#appointment_date", {
+                        disable: [
+                            ...disabledDates,
+                            function(date) {
+                                return (date.getDay() === 0 || date.getDay() === 6);
+                            }
+                        ],
+                    });
+                });
+        }
+
+
+        document.querySelector('#service').addEventListener('change', function() {
+            const especialidadId = this.value;
+            updateDisabledDates(especialidadId);
         });
-    }
-
-
-    document.querySelector('#service').addEventListener('change', function() {
-        const especialidadId = this.value;
-        updateDisabledDates(especialidadId);
-    });
-</script>
+    </script>
 
 </body>
+
 </html>
 <style>
     .flex-input {
@@ -126,5 +118,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 </style>
 <?php
-    mysqli_close($conexion);
+mysqli_close($conexion);
 ?>
