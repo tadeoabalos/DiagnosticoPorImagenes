@@ -54,10 +54,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtContacto->execute([$id_paciente, $contactoNombre, $contactoApellido, $contactoTelefono]);
 
         $pdo->commit();
+
+        // Preparar acción para enviar correo
+        $action = 'mail_alta_paciente';
+        include '../utils/send_email.php';
+        //include '../index_empleados/send_email.php';
+
+        // Redirección dependiendo del sitio
         if (isset($_GET['site']) && $_GET['site'] == 'recepcionista') {
             header('Location: ../index_empleados/index_recepcionista.php?mensaje=registro_exitoso');
             exit();
-        } else if(isset($_GET['site']) && $_GET['site'] == 'paciente') {
+        } 
+        if (isset($_GET['site']) && $_GET['site'] == 'paciente') {
             header('Location: ../login/login_form.php?mensaje=registro_exitoso');
             exit();
         }
@@ -66,3 +74,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error al registrar el paciente: " . $e->getMessage();
     }
 }
+
