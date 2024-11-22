@@ -58,7 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Preparar acción para enviar correo
         $action = 'mail_alta_paciente';
         include '../utils/send_email.php';
-        //include '../index_empleados/send_email.php';
 
         // Redirección dependiendo del sitio
         if (isset($_GET['site']) && $_GET['site'] == 'recepcionista') {
@@ -74,4 +73,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error al registrar el paciente: " . $e->getMessage();
     }
 }
+
 

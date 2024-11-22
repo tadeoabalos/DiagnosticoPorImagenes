@@ -9,6 +9,10 @@ require '../vendor/autoload.php';
 
 $mail = new PHPMailer(true);
 
+if (!isset($action)) {
+    // Si no está definida, toma el valor del parámetro GET
+    $action = isset($_GET['action']) ? $_GET['action'] : null;
+}
 
 if ($action == 'mail_alta_paciente') {
     try {
@@ -133,8 +137,6 @@ if ($action == 'mail_alta_paciente') {
 
     try {
 
-        $id_paciente = $_POST['id_paciente'];
-
         // Consulta los datos del paciente
         $stmt = $pdo->prepare("SELECT correo, nombre, apellido FROM paciente WHERE id_paciente = ?");
         $stmt->execute([$id_paciente]);
@@ -147,6 +149,12 @@ if ($action == 'mail_alta_paciente') {
         // Obtiene el nombre completo y correo del paciente
         $nombre_completo = $row['nombre'] . ' ' . $row['apellido'];
         $correo_paciente = $row['correo']; // Correo del paciente
+        
+        $stmtEspecialidad = $pdo->prepare("SELECT nombre FROM especializacion WHERE id_especializacion = ?");
+    $stmtEspecialidad->execute([$id_especializacion]);
+    $rowEspecialidad = $stmtEspecialidad->fetch(PDO::FETCH_ASSOC);
+
+    $nombre_especialidad = $rowEspecialidad['nombre'];
 
         // Configuración de PHPMailer
         $mail->isSMTP();
@@ -203,7 +211,7 @@ if ($action == 'mail_alta_paciente') {
         <p>Estimado/a <strong>' . $nombre_completo . '</strong>,</p>
         <p>Le confirmamos que su turno ha sido reservado con éxito. Los detalles son los siguientes:</p>
         <ul>
-            <li><strong>Especialización:</strong> ' . htmlspecialchars($id_especializacion) . '</li>
+            <li><strong>Especialización:</strong> ' . htmlspecialchars($nombre_especialidad) . '</li>
             <li><strong>Fecha:</strong> ' . htmlspecialchars($fecha) . '</li>
             <li><strong>Hora:</strong> ' . htmlspecialchars($hora) . '</li>
         </ul>
@@ -351,8 +359,6 @@ if ($action == 'mail_alta_paciente') {
 
         $mail->AltBody = "Estimado/a $nombre_completo,\n\nNos complace informarle que su estudio ha sido recibido correctamente. El archivo correspondiente se encuentra adjunto.\n\n" . (empty($nota) ? '' : "Nota: $nota") . "\n\nGracias por utilizar nuestros servicios.";
 
-
-        // Enviar correo
         $mail->send();
         echo 'Correo enviado correctamente.';
         header('Location: ../index_empleados/index_radiologo.php?mensaje=subida_exitosa');

@@ -121,6 +121,10 @@ input[readonly]:focus {
                 <button type="submit" class="btn btn-primary" id="saveTurnoBtn" form="edit-turno-form">Guardar</button>
                 <button type="button" class="btn btn-danger" id="deleteTurnoBtn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Eliminar</button>
                 <?php endif; ?>
+                <script> 
+                $('#fecha_turno').prop('readonly', true);
+                $('#hora_turno').prop('readonly', true);
+                </script>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
