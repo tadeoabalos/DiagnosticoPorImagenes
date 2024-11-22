@@ -5,34 +5,17 @@ if (!isset($_SESSION['empleado_id'])) {
     exit;
 }
 ?>
-<!DOCTYPE html>
-<html lang="es">
 <?php
 $pageTitle = 'Administrativo';
 
 include '../utils/header.php';
 include '../conexion.php';
 ?>
-<style>
-    html,
-    body {
-        height: 100%;
-    }
-
-    body {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .container {
-        flex: 1;
-    }
-</style>
 
 <script>
     $(document).on('click', '#edit_turno', function(event) {
         var id_empleado = $(this).data('id');
-        console.log("ID del empleado: " + id_empleado);  
+        console.log("ID del empleado: " + id_empleado);
         var action = 'recepcion';
         $.ajax({
             url: "modal_info_empleado.php",
@@ -58,7 +41,7 @@ include '../conexion.php';
 
     $(document).on('click', '#view_turno', function(event) {
         var id_empleado = $(this).data('id');
-        console.log("ID del empleado: " + id_empleado);  
+        console.log("ID del empleado: " + id_empleado);
         var action = 'recepcion';
         $.ajax({
             url: "modal_info_empleado_view.php",
@@ -92,13 +75,14 @@ include '../conexion.php';
     });
 </script>
 
-<div class="container py-5">
-    <div class="table-responsive" id="impositivo-content">
-    <?php
-        if (isset($_GET['mensaje'])) {
-            $mensaje = $_GET['mensaje'];
-            if ($mensaje == 'baja_exitosa') {
-                echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
+<body>
+    <div class="container py-5">
+        <div class="table-responsive" id="impositivo-content">
+            <?php
+            if (isset($_GET['mensaje'])) {
+                $mensaje = $_GET['mensaje'];
+                if ($mensaje == 'baja_exitosa') {
+                    echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
                 <strong>¡Éxito!</strong> Empleado dado de baja exitosamente.
                 </div>
                 <script>
@@ -108,8 +92,8 @@ include '../conexion.php';
                         successMessage.classList.add("fade");
                     }, 2000);  // El mensaje desaparecerá después de 2 segundos
                 </script>';
-            } elseif ($mensaje == 'error_baja') {
-                echo '<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
+                } elseif ($mensaje == 'error_baja') {
+                    echo '<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
                 <strong>Error:</strong> Hubo un problema al dar de baja al empleado.
                 </div>
                 <script>
@@ -119,8 +103,8 @@ include '../conexion.php';
                         errorMessage.classList.add("fade");
                     }, 2000);  // El mensaje desaparecerá después de 2 segundos
                 </script>';
-            } elseif ($mensaje == 'error_id') {
-                echo '<div id="warningMessage" class="alert alert-warning alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
+                } elseif ($mensaje == 'error_id') {
+                    echo '<div id="warningMessage" class="alert alert-warning alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
                 <strong>Advertencia:</strong> ID del empleado no válido.
                 </div>
                 <script>
@@ -130,13 +114,13 @@ include '../conexion.php';
                         warningMessage.classList.add("fade");
                     }, 2000);  // El mensaje desaparecerá después de 2 segundos
                 </script>';
+                }
             }
-        }
-    ?>
+            ?>
 
-    <?php
-        if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'registro_exitoso') {
-            echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
+            <?php
+            if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'registro_exitoso') {
+                echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
             <strong>¡Éxito!</strong> Registro exitoso. Puede iniciar sesión ahora.
             </div>
             <script>
@@ -146,8 +130,8 @@ include '../conexion.php';
                     successMessage.classList.add("fade");
                 }, 2000);
             </script>';
-        } else if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'turno_actualizado') {
-            echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
+            } else if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'turno_actualizado') {
+                echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
             <strong>Turno Actualizado con éxito!</strong>
             </div>
             <script>
@@ -157,8 +141,8 @@ include '../conexion.php';
                     successMessage.classList.add("fade");
                 }, 2000);
             </script>';
-        } else if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'empleado_editado') {
-            echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
+            } else if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'empleado_editado') {
+                echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
             <strong>¡Éxito!</strong> El empleado ha sido editado correctamente.
             </div>
             <script>
@@ -168,28 +152,28 @@ include '../conexion.php';
                     successMessage.classList.add("fade");
                 }, 2000);
             </script>';
-        }
-    ?>
+            }
+            ?>
 
-        <h1 class="text-center mb-5 text-primary">Administración Empleados</h1>
-        <table id="table_turnos" class="table table-bordered table-hover table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th style="vertical-align: middle;" class="text-center">
-                        <a href="../alta/alta_empleado_form.php" class="text-success"><i class="fas fa-user-plus"></i></a>                      
-                    </th>
-                    <th style="vertical-align: middle;" class="text-center"><strong>Empleado</strong></th>
-                    <th style="vertical-align: middle;" class="text-center"><strong>Tipo de trabajo</strong></th>
-                    <th style="vertical-align: middle;" class="text-center"><strong>Correo Electrónico</strong></th>
-                    <th style="vertical-align: middle;" class="text-center"><strong>Turno</strong></th>
-                    <th style="vertical-align: middle;" class="text-center"><strong>Fecha de Alta</strong></th>
-                    <th style="vertical-align: middle;" class="text-center"><strong>Acciones</strong></th>
-                </tr>
-            </thead>
-            <tbody id="tbody_turnos">
-            <?php
-                // Modificamos la consulta para excluir empleados dados de baja
-                $stmt = $pdo->prepare("SELECT 
+            <h1 class="text-center mb-5 text-primary">Administración Empleados</h1>
+            <table id="table_turnos" class="table table-bordered table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="vertical-align: middle;" class="text-center">
+                            <a href="../alta/alta_empleado_form.php" class="text-success"><i class="fas fa-user-plus"></i></a>
+                        </th>
+                        <th style="vertical-align: middle;" class="text-center"><strong>Empleado</strong></th>
+                        <th style="vertical-align: middle;" class="text-center"><strong>Tipo de trabajo</strong></th>
+                        <th style="vertical-align: middle;" class="text-center"><strong>Correo Electrónico</strong></th>
+                        <th style="vertical-align: middle;" class="text-center"><strong>Turno</strong></th>
+                        <th style="vertical-align: middle;" class="text-center"><strong>Fecha de Alta</strong></th>
+                        <th style="vertical-align: middle;" class="text-center"><strong>Acciones</strong></th>
+                    </tr>
+                </thead>
+                <tbody id="tbody_turnos">
+                    <?php
+                    // Modificamos la consulta para excluir empleados dados de baja
+                    $stmt = $pdo->prepare("SELECT 
                                         e.id_empleado AS id,
                                         CONCAT(e.nombre, ' ', e.apellido) AS empleado, 
                                         e.correo, 
@@ -202,20 +186,20 @@ include '../conexion.php';
                                     WHERE e.tipo_empleado != 3
                                     AND e.fecha_baja IS NULL  -- Excluir empleados dados de baja
                                     ORDER BY e.fecha_alta");
-                $stmt->execute();
-                            
+                    $stmt->execute();
 
-                if ($stmt->rowCount() > 0) {
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        echo "<tr>";                        
-                        echo "<td class='text-center'><a class=\"btn btn-sm btn-outline-primary\" id=\"view_turno\" data-id=\"" . htmlspecialchars($row['id']) . "\">
+
+                    if ($stmt->rowCount() > 0) {
+                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            echo "<tr>";
+                            echo "<td class='text-center'><a class=\"btn btn-sm btn-outline-primary\" id=\"view_turno\" data-id=\"" . htmlspecialchars($row['id']) . "\">
                         <i class=\"fas fa-eye\"></i></a></td>";
-                        echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['empleado']) . "</td>";
-                        echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['tipo_empleado']) . "</td>";
-                        echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['correo']) . "</td>";
-                        echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['nombre_turno']) . "</td>";
-                        echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['fecha_alta']) . "</td>";
-                        echo "<td class='text-center'>
+                            echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['empleado']) . "</td>";
+                            echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['tipo_empleado']) . "</td>";
+                            echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['correo']) . "</td>";
+                            echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['nombre_turno']) . "</td>";
+                            echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['fecha_alta']) . "</td>";
+                            echo "<td class='text-center'>
                                 <a class=\"btn btn-sm btn-primary me-2\" id=\"edit_turno\" data-id=\"" . htmlspecialchars($row['id']) . "\">
                                     <i class='fas fa-pen'></i>
                                 </a>
@@ -223,19 +207,18 @@ include '../conexion.php';
                                     <i class='fas fa-trash'></i>
                                 </a>
                             </td>";
-                        echo "</tr>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='5' class='text-center'>No hay empleados disponibles</td></tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='5' class='text-center'>No hay empleados disponibles</td></tr>";
-                }
-                
-                ?>
-            </tbody>
-        </table>
+
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-<footer>
     <?php include '../utils/footer.php'; ?>
-</footer>
 </body>
+
 </html>
