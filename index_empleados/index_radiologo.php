@@ -8,7 +8,7 @@ if (!isset($_SESSION['empleado_id'])) {
 $pageTitle = 'Radiologo';
 
 include '../utils/header.php';
-include '../conexion.php';
+require '../conexion.php';
 ?>
 
 
