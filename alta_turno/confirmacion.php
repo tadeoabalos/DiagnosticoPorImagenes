@@ -110,7 +110,7 @@ if ($stmt->rowCount() > 0) {
             <p><strong>Hora:</strong> <?php echo htmlspecialchars($hora_turno); ?></p>
         </div>
         <p>¡Gracias por reservar su turno!</p>
-        <a href="../index/index.php" class="button">Volver al inicio</a>
+        <a href="../index_usuarios/index.php" class="button">Volver al inicio</a>
     </div>
 </body>
 
