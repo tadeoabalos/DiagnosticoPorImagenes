@@ -1,0 +1,12 @@
+{
+    "name": "kevin/diagnostico-por-imagenes-main",
+    "require-dev": {
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kevin\\DiagnosticoPorImagenesMain\\": "src/"
+        }
+    },
+    "require": {}
+}
