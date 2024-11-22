@@ -13,12 +13,12 @@ if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
 
-if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_POST['fecha_turno']) && isset($_POST['hora_turno'])) {
+if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_POST['fecha_turno']) && isset($_POST['hora_turno']) && isset($_POST['id_turno'])) {
 
-    $id_turno = $_SESSION['id_turno'];
+    $id_turno = $_POST['id_turno'];
     $id_paciente = $_SESSION['user_id'];
     $fecha_turno = $_POST['fecha_turno'];
-    $hora_turno = $_POST['hora_turno']; 
+    $hora_turno = $_POST['hora_turno'];
 
     if (empty($fecha_turno) || empty($hora_turno)) {
         die("Error: uno o más campos están vacíos.");
@@ -28,7 +28,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_POST['fecha_t
 
     $stmt = $conn->prepare($sql);
 
-    $stmt->bind_param("ssii", $fecha_turno, $hora_turno, $id_paciente, $id_turno); 
+    $stmt->bind_param("ssii", $fecha_turno, $hora_turno, $id_paciente, $id_turno);
 
     if ($stmt->execute()) {
         header('Location: ../index_empleados/index_recepcionista.php?mensaje=turno_actualizado');
@@ -58,7 +58,11 @@ if (isset($_SESSION['user_id'], $_SESSION['service'], $_SESSION['appointment_dat
 
     if ($stmt->execute()) {
         $id_turno = $conn->insert_id;
+
         $_SESSION['id_turno'] = $id_turno;
+
+        $action = 'mail_alta_turno';
+        include '../utils/send_email.php';
         header("Location: confirmacion.php");
         exit();
     } else {
@@ -71,4 +75,5 @@ if (isset($_SESSION['user_id'], $_SESSION['service'], $_SESSION['appointment_dat
 }
 
 $conn->close();
+
 
