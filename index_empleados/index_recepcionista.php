@@ -1,9 +1,9 @@
 <?php
 session_start();
-if (!isset($_SESSION['empleado_id'])) {
-    header('Location: ../index/index.php');  // Redirigir si no está autenticado
+/*if (!isset($_SESSION['empleado_id'])) {
+    header('Location: ../index/index.php'); 
     exit;
-}
+}*/
 
 $pageTitle = 'Administrativo';
 

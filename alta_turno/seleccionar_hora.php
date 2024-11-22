@@ -38,36 +38,31 @@ if ($resultado_horarios) {
 $pageTitle = 'Pedir Turno - Seleccionar Hora';
 include '../utils/header_index_usuarios.php';
 ?>
-
 <body>
-
-    <div class="container my-5">
-        <h2 class="text-center mb-4">Seleccionar Hora</h2>
-        <p class="text-center">Turnos disponibles para <strong><?php echo $nombre_especializacion; ?></strong> en la fecha <strong><?php echo htmlspecialchars($fecha_turno); ?></strong>.</p>
+    <div class="container my-5 text-center" style="max-width: 400px; margin: auto;">
+        <h2 class="mb-4">Seleccionar Hora</h2>
+        <p>
+            Turnos disponibles para <strong><?php echo $nombre_especializacion; ?></strong> en la fecha <strong><?php echo htmlspecialchars($fecha_turno); ?></strong>.
+        </p>
+        <form id="appointmentForm" action="procesar_turno.php" method="POST">
+            <div class="mb-3">
+                <select class="form-select" id="hora" name="hora" required>
+                    <option value="">Seleccione un horario</option>
+                    <?php
+                    foreach ($horarios_disponibles as $hora) {
+                        echo "<option value='$hora'>$hora</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Confirmar Turno</button>            
+            <a href="alta_turno.php" class="btn btn-secondary w-25 mt-3">Volver</a>
+        </form>
     </div>
 
-    <form id="appointmentForm" action="procesar_turno.php" method="POST" class="mx-auto" style="max-width: 600px;">
-        <div class="mb-3">
-            <label for="hora" class="form-label">Hora</label>
-            <select class="form-select" id="hora" name="hora" required>
-                <option value="">Seleccione un horario</option>
-                <?php
-                foreach ($horarios_disponibles as $hora) {
-                    echo "<option value='$hora'>$hora</option>";
-                }
-                ?>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Confirmar Turno</button>
-    </form>
-
     <?php include '../utils/footer.php'; ?>
-
 </body>
-
 </html>
-
 <?php
 mysqli_close($conexion);
 ?>

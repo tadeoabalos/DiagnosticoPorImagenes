@@ -71,15 +71,15 @@ include '../utils/header_index_usuarios.php';
             </script>';
             }
             ?>
-            <h3 class="mb-5 text-primary">Turnos de <?php echo $_SESSION['user_name'] . ' ' . $_SESSION['user_surname'] ?> <i class="fas fa-calendar-alt ms-2"></i></h1>
+            <h3 class="mb-5 text-primary">Turnos vencidos de <?php echo $_SESSION['user_name'] . ' ' . $_SESSION['user_surname'] ?> <i class="fas fa-calendar-alt ms-2"></i></h1>
             <div class="d-flex mt-3 mb-3">
                 <a href="../alta_turno/alta_turno.php" class="btn btn-primary me-2">
                     <input type="hidden" name="session_id" value="<?php echo session_id(); ?>">
                     Pedir nuevo turno
                 </a>
-                <a href="turnos_vencidos.php" class="btn btn-secondary">
+                <a href="index.php" class="btn btn-secondary">
                     <input type="hidden" name="session_id" value="<?php echo session_id(); ?>">
-                    Ver turnos vencidos
+                    Ver turnos pendientes
                 </a>
             </div>
             <table id="table_turnos" class="table table-bordered table-hover table-striped">
@@ -107,7 +107,7 @@ include '../utils/header_index_usuarios.php';
                     especializacion e ON e.id_especializacion = tp.id_especializacion 
                 WHERE 
                     tp.id_paciente = '$_SESSION[user_id]'
-                    AND tp.fecha >= CURDATE()
+                    AND tp.fecha < CURDATE()
                 ORDER BY 
                     tp.fecha;
                 ");
@@ -121,10 +121,7 @@ include '../utils/header_index_usuarios.php';
                             echo "<td  style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['especialidad']) . "</td>";
                             echo "<td class='text-center'>      
                                 <a class='btn btn-sm btn-outline-primary' id='view_turno' data-id_paciente='" . $row['id_paciente'] . "' data-id='" . $row['id'] . "'>
-                                    <i class='fas fa-eye'></i></a>                          
-                                <a class=\"btn btn-sm btn-danger\" id=\"edit_turno\" data-id=\"" . htmlspecialchars($row['id']) . "\">
-                                    <i class='fas fa-trash'></i>
-                                </a>
+                                    <i class='fas fa-eye'></i></a>                                                          
                             </td>";
                             echo "</tr>";
                         }

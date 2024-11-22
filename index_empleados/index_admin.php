@@ -184,7 +184,7 @@ include '../conexion.php';
                                     JOIN tipo_empleado te ON e.tipo_empleado = te.id
                                     LEFT JOIN turno t ON e.turno_id = t.id                                  
                                     WHERE e.tipo_empleado != 3
-                                    AND e.fecha_baja IS NULL  -- Excluir empleados dados de baja
+                                    AND e.fecha_baja IS NULL 
                                     ORDER BY e.fecha_alta");
                     $stmt->execute();
 
