@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,12 +16,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+        }
+    </style>
 </head>
 
 <body>
     <header class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-        <?php if (isset($_SESSION['user_name'])): ?>
+            <?php if (isset($_SESSION['user_name'])): ?>
                 <div class="navbar-brand d-flex align-items-center">
                     <img width="45" height="45" src="https://img.icons8.com/emoji/48/x-ray-emoji.png" alt="x-ray-emoji" class="me-2" />
                     <span>Consultorio Radiológico</span>
@@ -57,4 +75,3 @@
             </div>
 
     </header>
-</body>
