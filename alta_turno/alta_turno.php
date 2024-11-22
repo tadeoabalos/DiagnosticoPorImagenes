@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../index/index.php');  // Redirigir si no está autenticado
+    exit;
+}
 $mostrar_modal = !isset($_SESSION['usuario']);
 $conexion = mysqli_connect("localhost", "root", "", "radiologia_db");
 if (!$conexion) {
@@ -24,11 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = 'Pedir Turno';
-include '../utils/header_index_usuarios.php'; 
+include '../utils/header_index_usuarios.php';
 ?>
 
 <body>
-    
+
     <div class="container my-5">
         <h2 class="text-center mb-4">Reservar Turno</h2>
         <p class="text-center">Complete el formulario para reservar un turno en nuestra clínica.</p>
@@ -78,9 +82,7 @@ include '../utils/header_index_usuarios.php';
         </div>
     </form>
 
-    <footer>
-        <?php include '../utils/footer.php'; ?>
-    </footer>
+    <?php include '../utils/footer.php'; ?>
 
     <script>
         function updateDisabledDates(especialidadId) {
