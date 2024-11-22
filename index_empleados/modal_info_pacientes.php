@@ -4,15 +4,17 @@ include '../conexion.php';
 if (isset($_POST['paciente'])) {
 
     $id_paciente = $_POST['paciente'];
+    $id_turno = $_POST['id_turno'];
     $action = $_POST['action'];
 
     $stmt = $pdo->prepare("SELECT tp.fecha, tp.hora, p.*, e.nombre AS especialidad 
                            FROM turnos_pacientes tp 
                            JOIN paciente p ON p.id_paciente = tp.id_paciente 
                            JOIN especializacion e ON e.id_especializacion = tp.id_especializacion 
-                           WHERE p.id_paciente = :id_paciente");
+                           WHERE p.id_paciente = :id_paciente AND tp.id = :id_turno");
 
     $stmt->bindParam(':id_paciente', $id_paciente, PDO::PARAM_INT);
+    $stmt->bindParam(':id_turno', $id_turno, PDO::PARAM_INT);
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
@@ -33,6 +35,21 @@ if (isset($_POST['paciente'])) {
 }
 ?>
 
+<style>
+    input[readonly] {
+    background-color: #e9ecef;
+    color: #495057;
+    border: 1px solid #ced4da;
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+input[readonly]:focus {
+    outline: none;
+    box-shadow: none;
+}
+</style>
+
 
 <div class="modal fade" id="modal_turno" tabindex="-1" aria-labelledby="modal_turnoLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -44,7 +61,8 @@ if (isset($_POST['paciente'])) {
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="edit-turno-form" action="../alta_turno/procesar_turno.php?action=edit" method="POST">
+                <form id="edit-turno-form" action="../alta_turno/procesar_turno.php?&action=edit" method="POST">
+                <input type="hidden" class="form-control" id="id_turno" name="id_turno" value="<?php echo htmlspecialchars($id_turno); ?>">
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="dni" class="form-label">DNI</label>
@@ -126,3 +144,4 @@ if (isset($_POST['paciente'])) {
         </div>
     </div>
 </div>
+
