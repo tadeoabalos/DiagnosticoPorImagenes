@@ -2,7 +2,10 @@
 $pageTitle = 'Registro de Empleados';
 include '../utils/header.php'; 
 ?>
-
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
 <body class="d-flex flex-column min-vh-100">
     <div class="container mt-5 mb-5 flex-grow-1 d-flex justify-content-center align-items-center">
         <div class="card shadow-lg w-75">
@@ -38,7 +41,7 @@ include '../utils/header.php';
                         </div>
                         <div class="col-md-4">
                             <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                            <input type="text" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" placeholder="Ingrese su Fecha de Nacimiento" required>
                         </div>
                     </div>
 
@@ -67,8 +70,14 @@ include '../utils/header.php';
         </div>
     </div>
     <?php include '../utils/footer.php' ?>
-
-    <script>
+    <script>        
+        var today = new Date();       
+        var minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+        
+        flatpickr("#fecha_nacimiento", {
+            maxDate: minDate,  
+            dateFormat: "Y-m-d"            
+        });
         $('#tipo-empleado').change(function() {
             const tipoEmpleado = $(this).val();
 
