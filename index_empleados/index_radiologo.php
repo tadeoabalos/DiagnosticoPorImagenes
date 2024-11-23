@@ -42,79 +42,83 @@ require '../conexion.php';
         });
     });
 </script>
-
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
 <body>
     <div class="container py-5">
         <?php
-        if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'subida_exitosa') {
-            echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
-            <strong>¡Éxito!</strong> El envio de los datos se realizo correctamente.
-            </div>
-            <script>
-                setTimeout(function() {
-                    var successMessage = document.getElementById("successMessage");
-                    successMessage.classList.remove("show");
-                    successMessage.classList.add("fade");
-                    window.location.replace("index_radiologo.php"); 
-                }, 2000);  // El mensaje desaparecerá después de 2 segundos
-            </script>';
-        } else if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'subida_erronea') {
-            echo '<div id="successMessage" class="alert alert-danger alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
-                <strong>Error al enviar los datos</strong> No se pudieron enviar los datos correctamente.
-            </div>
-            <script>
-                setTimeout(function() {
-                    var successMessage = document.getElementById("successMessage");
-                    successMessage.classList.remove("show");
-                    successMessage.classList.add("fade");
-                    window.location.replace("index_radiologo.php"); 
-                }, 2000);  // El mensaje desaparecerá después de 2 segundos
-            </script>';
+            if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'subida_exitosa') {
+                echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
+                <strong>¡Éxito!</strong> El envio de los datos se realizo correctamente.
+                </div>
+                <script>
+                    setTimeout(function() {
+                        var successMessage = document.getElementById("successMessage");
+                        successMessage.classList.remove("show");
+                        successMessage.classList.add("fade");
+                        window.location.replace("index_radiologo.php"); 
+                    }, 2000);  // El mensaje desaparecerá después de 2 segundos
+                </script>';
+            } else if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'subida_erronea') {
+                echo '<div id="successMessage" class="alert alert-danger alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
+                    <strong>Error al enviar los datos</strong> No se pudieron enviar los datos correctamente.
+                </div>
+                <script>
+                    setTimeout(function() {
+                        var successMessage = document.getElementById("successMessage");
+                        successMessage.classList.remove("show");
+                        successMessage.classList.add("fade");
+                        window.location.replace("index_radiologo.php"); 
+                    }, 2000);  // El mensaje desaparecerá después de 2 segundos
+                </script>';
+            }
+            ?>
+            <div class="table-responsive" id="impositivo-content">
+                <h4 class="text-center mb-2 text-primary">Pacientes<i class="fas fa-user-alt ms-2"></i></h4>
+                <table id="table_turnos_pacientes" class="table table-bordered table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th></th>
+                    <th style="vertical-align: middle;" class="text-center"><strong>Paciente</strong></th>
+                    <th style="vertical-align: middle;" class="text-center"><strong>Especialidad</strong></th>
+                    <th style="vertical-align: middle;" class="text-center"><strong>Turno</strong></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbody_pacientes">        
+        <?php
+        $stmt = $pdo->prepare("SELECT tp.id, tp.fecha, tp.hora, p.*, e.nombre AS especialidad 
+                             FROM turnos_pacientes tp 
+                             JOIN paciente p ON p.id_paciente = tp.id_paciente 
+                             JOIN especializacion e ON e.id_especializacion = tp.id_especializacion 
+                             WHERE 1=1 ORDER BY fecha");
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                echo "<tr>";
+                echo "<td class='text-center'><a class='btn btn-sm btn-outline-primary' id='view_turno' data-id_paciente='" . $row['id_paciente'] . "' data-id='" . $row['id'] . "'>
+                <i class='fas fa-eye'></i></a></td>";
+                echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['nombre'] . ' ' . $row['apellido']) . "</td>";
+                echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['especialidad']) . "</td>";
+                echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['hora'] . ' ' . $row['fecha']) . "</td>";
+                echo "<td style='vertical-align: middle;' class='text-center'>";
+                // Asignamos el data-id al botón para cada paciente
+                echo "<button class='btn btn-sm btn-success' id='add_button' data-id='" . $row['id_paciente'] . "' title='Enviar datos' data-bs-toggle='modal' data-bs-target='#modal_add_est'>";
+                echo "<i class='fas fa-upload'></i> Enviar Datos";
+                echo "</button>";
+                echo "</td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='5' class='text-center'>No hay turnos disponibles</td></tr>";
         }
         ?>
-        <div class="table-responsive" id="impositivo-content">
+    </tbody>
+</table>
 
-            <h1 class="text-center mb-5 text-primary">Pacientes<i class="fas fa-user-alt ms-2"></i></h1>
-            <table id="table_turnos_pacientes" class="table table-bordered table-hover table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th></th>
-                        <th style="vertical-align: middle;" class="text-center"><strong>Paciente</strong></th>
-                        <th style="vertical-align: middle;" class="text-center"><strong>Especialidad</strong></th>
-                        <th style="vertical-align: middle;" class="text-center"><strong>Turno</strong></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="tbody_pacientes">
-                    <?php
-                    $stmt = $pdo->prepare("SELECT tp.id, tp.fecha, tp.hora, p.*, e.nombre AS especialidad 
-                 FROM turnos_pacientes tp 
-                 JOIN paciente p ON p.id_paciente = tp.id_paciente 
-                 JOIN especializacion e ON e.id_especializacion = tp.id_especializacion 
-                 WHERE 1=1 ORDER BY fecha");
-                    $stmt->execute();
-                    if ($stmt->rowCount() > 0) {
-                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<tr>";
-                            echo "<td class='text-center'><a class='btn btn-sm btn-outline-primary' id='view_turno' data-id_paciente='" . $row['id_paciente'] . "' data-id='" . $row['id'] . "'>
-                            <i class='fas fa-eye'></i></a></td>";
-                            echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['nombre'] . ' ' . $row['apellido']) . "</td>";
-                            echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['especialidad']) . "</td>";
-                            echo "<td style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['hora'] . ' ' . $row['fecha']) . "</td>";
-                            echo "<td style='vertical-align: middle;' class='text-center'>";
-                            // Asignamos el data-id al botón para cada paciente
-                            echo "<button class='btn btn-sm btn-success' id='add_button' data-id='" . $row['id_paciente'] . "' title='Enviar datos' data-bs-toggle='modal' data-bs-target='#modal_add_est'>";
-                            echo "<i class='fas fa-upload'></i> Enviar Datos";
-                            echo "</button>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='5' class='text-center'>No hay turnos disponibles</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
         </div>
     </div>
 
@@ -163,10 +167,30 @@ require '../conexion.php';
             form.reset();
             form.querySelector('#id_paciente').value = '';
         });
+        $(document).ready(function() {        
+        $('#table_turnos_pacientes').DataTable({
+            "language": {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Último"
+                }
+            },
+            "paging": true, 
+            "ordering": true, 
+            "info": true 
+        });
+    });
     </script>
-
     <?php include '../utils/footer.php'; ?>
-
 </body>
-
 </html>

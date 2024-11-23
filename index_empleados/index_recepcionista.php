@@ -10,7 +10,37 @@ $pageTitle = 'Administrativo';
 include '../utils/header.php';
 include '../conexion.php';
 ?>
-
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        // Inicializar DataTables
+        $('#table_turnos').DataTable({
+            "language": {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Último"
+                }
+            },
+            "paging": true, 
+            "ordering": true, 
+            "info": true 
+        });
+    });
+    </script>
+</head>
 <script>
     $(document).on('click', '#view_turno', function(event) {
         $('#modal_turno').remove();
