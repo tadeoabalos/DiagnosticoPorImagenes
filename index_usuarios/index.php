@@ -40,10 +40,7 @@ include '../utils/header_index_usuarios.php';
         });
     });
 </script>
-<head>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
     <script>
     $(document).ready(function() {
         // Inicializar DataTables
@@ -70,7 +67,6 @@ include '../utils/header_index_usuarios.php';
         });
     });
     </script>
-</head>
 <body>
     <div class="container py-5">
         <div class="table-responsive" id="impositivo-content">
