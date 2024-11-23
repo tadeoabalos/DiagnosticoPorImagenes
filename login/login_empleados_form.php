@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
 <?php
 $pageTitle = 'Login Empleado';
 include '../utils/header.php';
@@ -26,7 +24,7 @@ include '../utils/header.php';
         </form>
     </div>
 
+
 </body>
 
-</html>
 </html>
