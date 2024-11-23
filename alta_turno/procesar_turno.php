@@ -40,21 +40,23 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_POST['fecha_t
     $stmt->close();
 }
 
-if (isset($_SESSION['user_id'], $_SESSION['service'], $_SESSION['appointment_date'], $_POST['hora'])) {
+if (isset($_SESSION['user_id'], $_SESSION['service'], $_SESSION['appointment_date'], $_POST['hora'], $_POST['tecnico'])) {
     $id_paciente = $_SESSION['user_id'];
     $id_especializacion = $_SESSION['service'];
     $fecha = $_SESSION['appointment_date'];
     $hora = $_POST['hora'];
-
-    if (empty($id_especializacion) || empty($fecha) || empty($hora)) {
+    $id_tecnico = $_POST['tecnico']; // Asegúrate de que el select de técnico en el formulario use el nombre "tecnico"
+    
+    if (empty($id_especializacion) || empty($fecha) || empty($hora) || empty($id_tecnico)) {
         die("Error: uno o más campos están vacíos.");
     }
 
-    $sql = "INSERT INTO turnos_pacientes (id_paciente, id_especializacion, fecha, hora)
-    VALUES (?, ?, ?, ?)";
+    // Modificación para incluir el id_tecnico en la consulta
+    $sql = "INSERT INTO turnos_pacientes (id_paciente, id_especializacion, fecha, hora, id_tecnico)
+    VALUES (?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iiss", $id_paciente, $id_especializacion, $fecha, $hora);
+    $stmt->bind_param("iissi", $id_paciente, $id_especializacion, $fecha, $hora, $id_tecnico);
 
     if ($stmt->execute()) {
         $id_turno = $conn->insert_id;
@@ -75,5 +77,4 @@ if (isset($_SESSION['user_id'], $_SESSION['service'], $_SESSION['appointment_dat
 }
 
 $conn->close();
-
-
+?>

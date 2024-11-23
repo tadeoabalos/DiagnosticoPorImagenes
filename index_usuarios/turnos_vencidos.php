@@ -73,13 +73,13 @@ include '../utils/header_index_usuarios.php';
             ?>
             <h3 class="mb-5 text-primary">Turnos vencidos de <?php echo $_SESSION['user_name'] . ' ' . $_SESSION['user_surname'] ?> <i class="fas fa-calendar-alt ms-2"></i></h1>
             <div class="d-flex mt-3 mb-3">
-                <a href="../alta_turno/alta_turno.php" class="btn btn-primary me-2">
-                    <input type="hidden" name="session_id" value="<?php echo session_id(); ?>">
-                    Pedir nuevo turno
-                </a>
-                <a href="index.php" class="btn btn-secondary">
+                <a href="index.php" class="btn btn-secondary me-2">
                     <input type="hidden" name="session_id" value="<?php echo session_id(); ?>">
                     Ver turnos pendientes
+                </a>
+                <a href="../alta_turno/alta_turno.php" class="btn btn-primary ">
+                    <input type="hidden" name="session_id" value="<?php echo session_id(); ?>">
+                    Pedir nuevo turno
                 </a>
             </div>
             <table id="table_turnos" class="table table-bordered table-hover table-striped">

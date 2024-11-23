@@ -8,7 +8,6 @@ if (!$conexion) {
 $especializacion = isset($_SESSION['service']) ? $_SESSION['service'] : null;
 $nombre_especializacion = isset($_SESSION['service_name']) ? $_SESSION['service_name'] : null;
 $fecha_turno = isset($_SESSION['appointment_date']) ? $_SESSION['appointment_date'] : null;
-
 $horarios_disponibles = [];
 
 $consulta_horarios = "SELECT * FROM horarios_turno";
@@ -46,7 +45,7 @@ include '../utils/header_index_usuarios.php';
         </p>
         <form id="appointmentForm" action="procesar_turno.php" method="POST">
             <div class="mb-3">
-                <select class="form-select" id="hora" name="hora" required>
+                <select class="form-select" id="hora" name="hora" style="margin-bottom: 5px;" required>
                     <option value="">Seleccione un horario</option>
                     <?php
                     foreach ($horarios_disponibles as $hora) {
@@ -54,6 +53,16 @@ include '../utils/header_index_usuarios.php';
                     }
                     ?>
                 </select>
+                <div class="mb-3">
+                    <select class="form-select" id="tecnico" name="tecnico" required>
+                        <option value="">Seleccione un técnico disponible</option>
+                        <?php
+                            foreach ($tecnicos as $tecnico) {
+                                echo "<option value='" . $tecnico['id_empleado'] . "'> Tec. " . $tecnico['nombre'] . " " . $tecnico['apellido'] . "</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary w-100">Confirmar Turno</button>            
             <a href="alta_turno.php" class="btn btn-secondary w-25 mt-3">Volver</a>
@@ -66,3 +75,37 @@ include '../utils/header_index_usuarios.php';
 <?php
 mysqli_close($conexion);
 ?>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {        
+        $('#tecnico').hide();        
+        $('#hora').change(function() {
+            var horaSeleccionada = $(this).val();
+
+            if (horaSeleccionada) {                
+                $.ajax({
+                    url: 'consultar_tecnicos.php',
+                    type: 'POST',
+                    data: { hora: horaSeleccionada },
+                    success: function(data) {
+                        var tecnicosDisponibles = JSON.parse(data);
+                        var tecnicoSelect = $('#tecnico');
+                        
+                        tecnicoSelect.empty();
+                        tecnicoSelect.append('<option value="">Seleccione un técnico disponible</option>');
+                        
+                        tecnicosDisponibles.forEach(function(tecnico) {
+                            tecnicoSelect.append('<option value="' + tecnico.id_empleado + '">Tec. ' + tecnico.nombre + ' ' + tecnico.apellido + '</option>');
+                        });
+                        
+                        tecnicoSelect.show();
+                    }
+                });
+            } else {            
+                $('#tecnico').hide();
+            }
+        });
+    });
+</script>
+

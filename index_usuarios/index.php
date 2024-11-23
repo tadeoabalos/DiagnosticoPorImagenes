@@ -54,32 +54,32 @@ include '../utils/header_index_usuarios.php';
                     var successMessage = document.getElementById("successMessage");
                     successMessage.classList.remove("show");
                     successMessage.classList.add("fade");
-                    window.location.replace("index_recepcionista.php"); 
+                    window.location.replace("index.php"); 
                 }, 2000);  // El mensaje desaparecerá después de 2 segundos
             </script>';
             } else if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'turno_actualizado') {
                 echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050;">
-                <strong>Turno Actualizado con exito!</strong> Registro exitoso.
+                <strong>Turno dado de baja con éxito.</strong>
             </div>
             <script>
                 setTimeout(function() {
                     var successMessage = document.getElementById("successMessage");
                     successMessage.classList.remove("show");
                     successMessage.classList.add("fade");
-                    window.location.replace("index_recepcionista.php"); 
+                    window.location.replace("index.php"); 
                 }, 2000);  // El mensaje desaparecerá después de 2 segundos
             </script>';
             }
             ?>
             <h3 class="mb-5 text-primary">Turnos de <?php echo $_SESSION['user_name'] . ' ' . $_SESSION['user_surname'] ?> <i class="fas fa-calendar-alt ms-2"></i></h1>
             <div class="d-flex mt-3 mb-3">
-                <a href="../alta_turno/alta_turno.php" class="btn btn-primary me-2">
-                    <input type="hidden" name="session_id" value="<?php echo session_id(); ?>">
-                    Pedir nuevo turno
-                </a>
-                <a href="turnos_vencidos.php" class="btn btn-secondary">
+                <a href="turnos_vencidos.php" class="btn btn-secondary me-2">
                     <input type="hidden" name="session_id" value="<?php echo session_id(); ?>">
                     Ver turnos vencidos
+                </a>
+                <a href="../alta_turno/alta_turno.php" class="btn btn-primary">
+                    <input type="hidden" name="session_id" value="<?php echo session_id(); ?>">
+                    Pedir nuevo turno
                 </a>
             </div>
             <table id="table_turnos" class="table table-bordered table-hover table-striped">
@@ -88,6 +88,7 @@ include '../utils/header_index_usuarios.php';
                         <th style="vertical-align: middle;" class="text-center"><strong>Fecha</strong></th>
                         <th style="vertical-align: middle;" class="text-center"><strong>Hora</strong></th>
                         <th style="vertical-align: middle;" class="text-center"><strong>Especialidad</strong></th>
+                        <th style="vertical-align: middle;" class="text-center"><strong>Profesional</strong></th>
                         <th style="vertical-align: middle;" class="text-center"><strong>Acciones</strong></th>
                     </tr>
                 </thead>
@@ -98,20 +99,26 @@ include '../utils/header_index_usuarios.php';
                     tp.fecha, 
                     tp.hora, 
                     p.*, 
-                    e.nombre AS especialidad  
+                    e.nombre AS especialidad,
+                    emp.nombre AS profesional_nombre, 
+                    emp.apellido AS profesional_apellido
                 FROM 
                     turnos_pacientes tp
                 JOIN 
                     paciente p ON p.id_paciente = tp.id_paciente 
                 JOIN 
                     especializacion e ON e.id_especializacion = tp.id_especializacion 
+                JOIN 
+                    empleado emp ON emp.id_empleado = tp.id_tecnico
                 WHERE 
                     tp.id_paciente = '$_SESSION[user_id]'
                     AND tp.fecha >= CURDATE()
+                    AND tp.fecha_baja IS NULL                     
                 ORDER BY 
                     tp.fecha;
                 ");
-                    $stmt->execute();
+                $stmt->execute();
+                
 
                     if ($stmt->rowCount() > 0) {
                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -119,6 +126,7 @@ include '../utils/header_index_usuarios.php';
                             echo "<td  style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['fecha']) . "</td>";
                             echo "<td  style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['hora']) . "</td>";
                             echo "<td  style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['especialidad']) . "</td>";
+                            echo "<td  style='vertical-align: middle;' class='text-center'> Tec. "  . htmlspecialchars($row['profesional_nombre']) . ' ' . htmlspecialchars($row['profesional_apellido']) . "</td>";
                             echo "<td class='text-center'>      
                                 <a class='btn btn-sm btn-outline-primary' id='view_turno' data-id_paciente='" . $row['id_paciente'] . "' data-id='" . $row['id'] . "'>
                                     <i class='fas fa-eye'></i></a>                          
@@ -262,8 +270,58 @@ include '../utils/header_index_usuarios.php';
                 </div>
             </div>
         </div>
+    </div>        
+    <div class="modal fade" id="modalCancelacion" tabindex="-1" aria-labelledby="modalCancelacionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCancelacionLabel">Confirmar Cancelación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalContent">¿Realmente quiere cancelar el turno?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" id="confirmCancel" class="btn btn-danger">Dar de baja el turno</button>
+                </div>
+            </div>
+        </div>
     </div>
     <?php include '../utils/footer.php'; ?>
 </body>
-
 </html>
+<script>
+$(document).on('click', '#edit_turno', function(event) {
+    var turnoId = $(this).data('id');
+    var row = $(this).closest('tr');
+    var fecha = row.find('td:nth-child(1)').text();
+    var hora = row.find('td:nth-child(2)').text();
+    var especialidad = row.find('td:nth-child(3)').text();
+    
+    $('#modalContent').html(`¿Realmente quiere cancelar el turno del ${fecha} a las ${hora} para la especialidad ${especialidad}?`);
+        
+    $('#confirmCancel').data('id', turnoId);
+    
+    $('#modalCancelacion').modal('show');
+});
+
+$('#confirmCancel').on('click', function() {
+    var turnoId = $(this).data('id');
+    
+    $.ajax({
+        url: "./cancelar_turno.php",
+        type: 'POST',
+        data: {
+            id_turno: turnoId
+        },
+        success: function(response) {            
+            window.location.href = "index.php?mensaje=turno_actualizado";
+        },
+        error: function(xhr, status, error) {
+            console.error("Error al cancelar el turno:", error);
+            alert("Hubo un problema al cancelar el turno. Por favor, intenta nuevamente.");
+        }
+    });
+});
+</script>
