@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['empleado_id'] = $row['id_empleado'];
             $_SESSION['dni'] = $dni;
             $_SESSION['user'] = $user;
-            $_SESSION['id_empleado'] = $id_empleado;
+            $_SESSION['id_empleado'] = $row['id_empleado'];          
 
             switch ($id_tipoempleado) {
                 case 1:
@@ -44,7 +44,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['id_tipoempleado'] = 2;
                     header('Location: ../index_empleados/index_recepcionista.php');
                     break;
-
+                
+                case 3:
+                    $_SESSION['id_tipoempleado'] = 3;
+                    header('Location: ../index_empleados/index_admin.php');
+                    break;
+                
                 case 4:
                     $_SESSION['id_tipoempleado'] = 4;
                     header('Location: ../index_empleados/index_medico.php');

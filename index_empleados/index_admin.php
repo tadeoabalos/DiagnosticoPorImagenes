@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['empleado_id'])) {
-    header('Location: ../index/index.php');  // Redirigir si no está autenticado
+if (!isset($_SESSION['empleado_id']) || $_SESSION['id_tipoempleado'] != 3) {
+    header('Location: ../index/index.php');  
     exit;
 }
 ?>
@@ -10,7 +10,26 @@ $pageTitle = 'Administrativo';
 
 include '../utils/header.php';
 include '../conexion.php';
+
+if (isset($_GET['success']) && $_GET['success'] == 1) {
+    echo '<div id="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+            Usuario creado correctamente.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+
+    // JavaScript para ocultar la alerta después de 3 segundos
+    echo '<script>
+            setTimeout(function() {
+                var alert = document.getElementById("successAlert");
+                if (alert) {
+                    alert.classList.remove("show");
+                    alert.classList.add("hide");
+                }
+            }, 3000);
+          </script>';
+}
 ?>
+
 
 <script>
     $(document).on('click', '#edit_turno', function(event) {

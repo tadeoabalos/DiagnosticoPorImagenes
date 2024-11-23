@@ -1,9 +1,9 @@
 <?php
 session_start();
-/*if (!isset($_SESSION['empleado_id'])) {
+if (!isset($_SESSION['empleado_id']) || ($_SESSION['id_tipoempleado'] != 2 && $_SESSION['id_tipoempleado'] != 3)){
     header('Location: ../index/index.php'); 
     exit;
-}*/
+}
 
 $pageTitle = 'Administrativo';
 

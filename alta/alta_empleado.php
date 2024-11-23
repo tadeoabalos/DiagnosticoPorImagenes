@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sqlEmpleado = "INSERT INTO empleado (nombre, apellido, correo, dni, num_telefonico, fecha_nacimiento, direccion, num_matricula, tipo_empleado, turno_id, legajo) 
                     VALUES (:nombre, :apellido, :correo, :dni, :telefono, :fecha_nacimiento, :direccion, :num_matricula, :tipo_empleado, :turno, :legajo)";
     
-    try {        
+    try {
         $pdo->beginTransaction();
         
         $stmtEmpleado = $pdo->prepare($sqlEmpleado);
@@ -51,27 +51,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $stmtEmpleado->bindValue(':num_matricula', null, PDO::PARAM_NULL);
         }
-
+    
         $stmtEmpleado->bindParam(':tipo_empleado', $empleado);
         $stmtEmpleado->bindParam(':turno', $turno);
         $stmtEmpleado->bindParam(':legajo', $nuevoLegajo);
         $stmtEmpleado->execute();
         
         $empleadoId = $pdo->lastInsertId();
-
+    
         $sqlPwEmpleado = "INSERT INTO password_empleados (id_empleado, password_hash) VALUES (:empleado_id, :password_hash)";
         $stmtPwEmpleado = $pdo->prepare($sqlPwEmpleado);
         $stmtPwEmpleado->bindParam(':empleado_id', $empleadoId);
         $stmtPwEmpleado->bindParam(':password_hash', $passwordHash);
         $stmtPwEmpleado->execute();
-                
+        
         $pdo->commit();
-
-        echo "Registro guardado exitosamente con legajo: " . $nuevoLegajo;
-    } catch(PDOException $e) {        
+               
+        header("Location:  ../index_empleados/index_admin.php?success=1");
+        exit; 
+    } catch(PDOException $e) {
         $pdo->rollBack();
         echo "Error al guardar el registro: " . $e->getMessage();
     }
+    
 
     $conn = null;
 }
