@@ -25,41 +25,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $storedHash = $row['password_hash'];
             $id_tipoempleado = $row['id'];
-            $user = $user = $row['nombre'] . ' ' . $row['apellido'];
+            $user = $row['nombre'] . ' ' . $row['apellido'];
 
+            if (password_verify($password, $storedHash)) {
+                $_SESSION['empleado_id'] = $row['id_empleado'];
+                $_SESSION['dni'] = $dni;
+                $_SESSION['user'] = $user;
+                $_SESSION['id_empleado'] = $row['id_empleado'];
 
-            if (password_verify($password, $storedHash)) {                
-            $_SESSION['empleado_id'] = $row['id_empleado'];
-            $_SESSION['dni'] = $dni;
-            $_SESSION['user'] = $user;
-            $_SESSION['id_empleado'] = $row['id_empleado'];          
-
-            switch ($id_tipoempleado) {
-                case 1:
-                    $_SESSION['id_tipoempleado'] = 1;
-                    header('Location: ../index_empleados/index_radiologo.php');
-                    break;
-
-                case 2:
-                    $_SESSION['id_tipoempleado'] = 2;
-                    header('Location: ../index_empleados/index_recepcionista.php');
-                    break;
-                
-                case 3:
-                    $_SESSION['id_tipoempleado'] = 3;
-                    header('Location: ../index_empleados/index_admin.php');
-                    break;
-                
-                case 4:
-                    $_SESSION['id_tipoempleado'] = 4;
-                    header('Location: ../index_empleados/index_medico.php');
-                    break;
-
-                default:
-                    $_SESSION['error'] = "Tipo de empleado no reconocido.";
-                    break;
-            }
-            exit;
+                switch ($id_tipoempleado) {
+                    case 1:
+                        $_SESSION['id_tipoempleado'] = 1;
+                        header('Location: ../index_empleados/index_radiologo.php');
+                        break;
+                    case 2:
+                        $_SESSION['id_tipoempleado'] = 2;
+                        header('Location: ../index_empleados/index_recepcionista.php');
+                        break;
+                    case 3:
+                        $_SESSION['id_tipoempleado'] = 3;
+                        header('Location: ../index_empleados/index_admin.php');
+                        break;
+                    case 4:
+                        $_SESSION['id_tipoempleado'] = 4;
+                        header('Location: ../index_empleados/index_medico.php');
+                        break;
+                    default:
+                        $_SESSION['error'] = "Tipo de empleado no reconocido.";
+                        header('Location: login_empleados_form.php'); // Redirigir al formulario
+                        break;
+                }
+                exit;
             } else {
                 $_SESSION['error'] = "Contraseña incorrecta.";
             }
@@ -69,5 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } catch (PDOException $e) {
         $_SESSION['error'] = "Error al conectar con la base de datos: " . $e->getMessage();
     }
-}
 
+    // Redirigir al formulario en caso de error
+    header('Location: login_empleados_form.php');
+    exit;
+}
