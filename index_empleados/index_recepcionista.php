@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['empleado_id']) || ($_SESSION['id_tipoempleado'] != 2 && $_SESSION['id_tipoempleado'] != 3)){
-    header('Location: ../index/index.php'); 
+if (!isset($_SESSION['empleado_id'])) {
+    header('Location: ../index/index.php');
     exit;
 }
 
@@ -9,39 +9,64 @@ $pageTitle = 'Administrativo';
 
 include '../utils/header.php';
 include '../conexion.php';
+
+$conexion = mysqli_connect("localhost", "root", "", "radiologia_db");
+if (!$conexion) {
+    die("Error al conectar con la base de datos: " . mysqli_connect_error());
+}
+$sql = "SELECT * FROM especializacion";
+$resultado = mysqli_query($conexion, $sql);
 ?>
-<head>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script>
+
+<script>
     $(document).ready(function() {
-        // Inicializar DataTables
         $('#table_turnos').DataTable({
+            "responsive": true, // Diseño adaptable a pantallas pequeñas
             "language": {
-                "sProcessing": "Procesando...",
+                "sProcessing": "<i class='fas fa-spinner fa-spin'></i> Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",
                 "sZeroRecords": "No se encontraron resultados",
                 "sEmptyTable": "Ningún dato disponible en esta tabla",
-                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                "sSearch": "Buscar:",
+                "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando 0 a 0 de 0 registros",
+                "sInfoFiltered": "(filtrado de _MAX_ registros totales)",
+                "sSearch": "<i class='fas fa-search'></i> Buscar:",
                 "oPaginate": {
-                    "sFirst": "Primero",
-                    "sPrevious": "Anterior",
-                    "sNext": "Siguiente",
-                    "sLast": "Último"
+                    "sFirst": "<i class='fas fa-angle-double-left'></i>",
+                    "sPrevious": "<i class='fas fa-angle-left'></i>",
+                    "sNext": "<i class='fas fa-angle-right'></i>",
+                    "sLast": "<i class='fas fa-angle-double-right'></i>"
                 }
             },
-            "paging": true, 
-            "ordering": true, 
-            "info": true 
+            "pagingType": "full_numbers", // Paginación completa con botones
+            "lengthMenu": [5, 10, 25, 50], // Opciones de registros por página
+            "pageLength": 10 // Número predeterminado de registros por página
         });
     });
-    </script>
-</head>
+</script>
 <script>
+    function updateDisabledDates(especialidadId) {
+        fetch('../alta_turno/get_disabled_dates.php?especialidad_id=' + especialidadId)
+            .then(response => response.json())
+            .then(disabledDates => {
+                flatpickr("#appointment_date", {
+                    minDate: new Date().setDate(new Date().getDate() + 1),
+                    maxDate: new Date().setDate(new Date().getDate() + 30),
+                    disable: [
+                        ...disabledDates,
+                        function(date) {
+                            return (date.getDay() === 0 || date.getDay() === 6);
+                        }
+                    ],
+                });
+            });
+    }
+
+    $(document).on('change', '#service', function(event) {
+        const especialidadId = $(this).val();
+        updateDisabledDates(especialidadId);
+    });
+
     $(document).on('click', '#view_turno', function(event) {
         $('#modal_turno').remove();
         var id_paciente_turno = $(this).data('id_paciente');
@@ -159,54 +184,71 @@ include '../conexion.php';
                             <button type="button" id="btnYaTieneUsuario" class="btn btn-outline-primary me-2">Ya tiene usuario</button>
                             <button type="button" id="btnNoTieneUsuario" class="btn btn-outline-secondary">No tiene usuario</button>
                         </div>
-
-                        <form id="formYaTieneUsuario" action="procesar_turno.php" method="POST" class="d-none">
+                        <div id="mensaje"></div>
+                        <form id="formYaTieneUsuario" method="POST" class="d-none">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="name" class="form-label">Nombre Completo</label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="email" class="form-label">Correo Electrónico</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <label for="dni_turno" class="form-label">DNI</label>
+                                    <input type="number" class="form-control" id="dni_turno" name="dni_turno" required>
                                 </div>
                             </div>
-
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="phone" class="form-label">Teléfono</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
+                                <h4 class="mt-1 mb-3 text-primary">Detalles de la Reserva</h4>
+                                <div class="mb-3">
                                     <label for="service" class="form-label">Especialidad</label>
                                     <select class="form-select" id="service" name="service" required>
-                                        <option hidden selected value="">Selecciona una opción</option>
-                                        <option value="radiologia">Radiología</option>
-                                        <option value="ecografia">Ecografía</option>
-                                        <option value="doppler">Ecografía Doppler</option>
-                                        <option value="mamografia">Mamografía</option>
-                                        <option value="resonancia_magnetica">Resonancia Magnética</option>
-                                        <option value="estudios_cardiologicos">Estudios Cardiológicos</option>
-                                        <option value="imagenes_dentales">Imágenes Dentales</option>
+                                        <option value="">Seleccione una especialidad</option>
+                                        <?php
+                                        if ($resultado && mysqli_num_rows($resultado) > 0) {
+                                            while ($row = mysqli_fetch_assoc($resultado)) {
+                                                echo "<option value='" . $row['id_especializacion'] . "'>" . $row['nombre'] . "</option>";
+                                            }
+                                        } else {
+                                            echo "<option value=''>No hay especialidades disponibles</option>";
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="date" class="form-label">Fecha</label>
-                                    <input type="text" class="form-control" id="date" name="date" placeholder="Seleccione Fecha" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="time" class="form-label">Hora</label>
-                                    <select class="form-select" id="time" name="time" required>
-                                        <option hidden selected value="">Seleccione una hora</option>
-                                    </select>
-                                </div>
+                            <div class="mb-3">
+                                <label for="appointment_date" class="form-label">Fecha de Turno</label>
+                                <input type="text" id="appointment_date" name="appointment_date" class="form-control" placeholder="Seleccione una fecha" required>
                             </div>
-
-                            <button type="submit" class="btn btn-primary w-100">Confirmar Turno</button>
+                            <div class="d-grid">
+                                <button type="button" id="siguiente" class="btn btn-primary">Siguiente</button>
+                            </div>
                         </form>
+
+                        <script>
+                            $(document).on('click', '#siguiente', function(event) {
+                                event.preventDefault();
+
+                                var form = $('#formYaTieneUsuario');
+                                if (!form[0].checkValidity()) {
+                                    form.addClass('was-validated');
+                                    return;
+                                }
+
+                                $.ajax({
+                                    url: "seleccionar_hora_recepcion.php",
+                                    type: 'POST',
+                                    data: form.serialize(),
+                                    dataType: 'json',
+                                    success: function(response) {
+                                        if (response.status === 'success') {
+                                            $('#mensaje').html('');
+                                            $('#formYaTieneUsuario').html(response.html);
+                                        } else if (response.status === 'error') {
+                                            $('#mensaje').html('<div class="alert alert-warning" role="alert">' + response.message + '</div>');
+                                        }
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error("Error en la solicitud AJAX:", error);
+                                        $('#mensaje').html('<div class="alert alert-danger" role="alert">Hubo un problema al procesar tu solicitud. Intenta nuevamente.</div>');
+                                    }
+                                });
+                            });
+                        </script>
 
                         <form id="formNoTieneUsuario" action="../alta/alta_paciente.php?&site=recepcionista" method="POST" class="d-none">
                             <h5 class="text-primary">Datos del Paciente</h5>
@@ -272,7 +314,19 @@ include '../conexion.php';
             </div>
         </div>
     </div>
+    <style>
+        .shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
+        .text-primary {
+            color: #007bff !important;
+        }
+
+        .bg-white {
+            background-color: #ffffff !important;
+        }
+    </style>
     <script>
         $(document).ready(function() {
             // Inicializar el estado por defecto
@@ -320,6 +374,11 @@ include '../conexion.php';
                 $('#btnYaTieneUsuario').removeClass('btn-primary').addClass('btn-outline-primary');
                 $('#btnNoTieneUsuario').removeClass('btn-secondary').addClass('btn-outline-secondary');
             });
+
+            $(document).on('click', '.btn-close', function(event) {
+                $('#formYaTieneUsuario')[0].reset();
+                $('#formNoTieneUsuario')[0].reset();
+            });
         });
     </script>
 
@@ -328,3 +387,6 @@ include '../conexion.php';
 </body>
 
 </html>
+<?php
+mysqli_close($conexion);
+?>
