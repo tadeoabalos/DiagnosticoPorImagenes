@@ -38,6 +38,7 @@ $pageTitle = 'Pedir Turno - Seleccionar Hora';
 include '../utils/header_index_usuarios.php';
 ?>
 <body>
+    <div id="mensaje"></div>
     <div class="container my-5 text-center" style="max-width: 400px; margin: auto;">
         <h2 class="mb-4">Seleccionar Hora</h2>
         <p>
@@ -91,21 +92,32 @@ mysqli_close($conexion);
                     success: function(data) {
                         var tecnicosDisponibles = JSON.parse(data);
                         var tecnicoSelect = $('#tecnico');
-                        
+                        var mensaje = $('#mensaje'); // Contenedor para el mensaje de error
+
+                        // Limpiar el mensaje de error previo
+                        mensaje.empty();
+
                         tecnicoSelect.empty();
                         tecnicoSelect.append('<option value="">Seleccione un técnico disponible</option>');
                         
-                        tecnicosDisponibles.forEach(function(tecnico) {
-                            tecnicoSelect.append('<option value="' + tecnico.id_empleado + '">Tec. ' + tecnico.nombre + ' ' + tecnico.apellido + '</option>');
-                        });
-                        
-                        tecnicoSelect.show();
+                        if (tecnicosDisponibles.length > 0) {
+                            tecnicosDisponibles.forEach(function(tecnico) {
+                                tecnicoSelect.append('<option value="' + tecnico.id_empleado + '">Tec. ' + tecnico.nombre + ' ' + tecnico.apellido + '</option>');
+                            });
+                            tecnicoSelect.show();
+                        } else {
+                            // Mostrar un mensaje si no hay técnicos disponibles
+                            mensaje.append('<div class="alert alert-warning" role="alert">No hay técnicos disponibles para el horario seleccionado.</div>');
+                            tecnicoSelect.hide();  // Ocultar el select de técnicos
+                        }
                     }
                 });
             } else {            
                 $('#tecnico').hide();
+                $('#mensaje').empty();  // Limpiar el mensaje si no se seleccionó hora
             }
         });
     });
 </script>
+
 
