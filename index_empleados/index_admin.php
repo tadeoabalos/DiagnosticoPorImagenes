@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['empleado_id']) || $_SESSION['id_tipoempleado'] != 3) {
-    header('Location: ../index/index.php');  
+if (!isset($_SESSION['empleado_id'])) {
+    header('Location: ../index/index.php');  // Redirigir si no está autenticado
     exit;
 }
 ?>
@@ -10,26 +10,7 @@ $pageTitle = 'Administrativo';
 
 include '../utils/header.php';
 include '../conexion.php';
-
-if (isset($_GET['success']) && $_GET['success'] == 1) {
-    echo '<div id="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">
-            Usuario creado correctamente.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>';
-
-    // JavaScript para ocultar la alerta después de 3 segundos
-    echo '<script>
-            setTimeout(function() {
-                var alert = document.getElementById("successAlert");
-                if (alert) {
-                    alert.classList.remove("show");
-                    alert.classList.add("hide");
-                }
-            }, 3000);
-          </script>';
-}
 ?>
-
 
 <script>
     $(document).on('click', '#edit_turno', function(event) {
@@ -92,12 +73,6 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
             window.location.href = "dar_baja_empleado.php?id=" + id_empleado;
         }
     });
-</script>
-<head>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script>
     $(document).ready(function() {
         // Inicializar DataTables
         $('#table_turnos').DataTable({
@@ -123,7 +98,6 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
         });
     });
     </script>
-</head>
 <body>
     <div class="container py-5">
         <div class="table-responsive" id="impositivo-content">
