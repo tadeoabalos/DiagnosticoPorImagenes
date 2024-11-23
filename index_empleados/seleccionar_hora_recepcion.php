@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </select>
                     </div>
                     <div id="mensaje" class="mt-3"></div>
-                    <a href="../index_empleados/index_recepcionista.php" class="btn btn-secondary w-100">Volver</a>
+                    <a href="../index_empleados/index_recepcionista.php" id="volver" class="btn btn-secondary w-100 mb-2">Volver</a>
                     <button type="submit" class="btn btn-primary w-100">Confirmar Turno</button>
                 </form>
             </div>

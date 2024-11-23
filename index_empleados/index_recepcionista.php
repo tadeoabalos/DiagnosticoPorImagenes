@@ -329,6 +329,7 @@ $resultado = mysqli_query($conexion, $sql);
     </style>
     <script>
         $(document).ready(function() {
+            var originalFormYaTieneUsuario = $('#formYaTieneUsuario').html();
             // Inicializar el estado por defecto
             function initializeModal() {
                 // Mostrar 'Ya tiene Usuario' por defecto y aplicar el estilo al botón correspondiente
@@ -365,6 +366,7 @@ $resultado = mysqli_query($conexion, $sql);
 
             // Resetear formularios y botones cuando se cierra el modal
             $('#iframeModal').on('hidden.bs.modal', function() {
+                $('#formYaTieneUsuario').html(originalFormYaTieneUsuario).removeClass('d-none');
                 $('#formYaTieneUsuario')[0].reset();
                 $('#formNoTieneUsuario')[0].reset();
 
@@ -375,7 +377,14 @@ $resultado = mysqli_query($conexion, $sql);
                 $('#btnNoTieneUsuario').removeClass('btn-secondary').addClass('btn-outline-secondary');
             });
 
+            $(document).on('click', '#volver', function(event) {
+                event.preventDefault();
+                initializeModal();
+                $('#formYaTieneUsuario').html(originalFormYaTieneUsuario).removeClass('d-none');
+            });
+
             $(document).on('click', '.btn-close', function(event) {
+                $('#formYaTieneUsuario').html(originalFormYaTieneUsuario).removeClass('d-none');
                 $('#formYaTieneUsuario')[0].reset();
                 $('#formNoTieneUsuario')[0].reset();
             });
