@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,6 +17,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Scripts necesarios -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
     <style>
         html,
         body {
@@ -30,6 +40,27 @@
 
         .container {
             flex: 1;
+        }
+        /* Ajustar el contenedor de búsqueda */
+        .dataTables_filter {
+            text-align: left;
+            /* Alinear hacia la izquierda */
+        }
+
+        /* Personalizar el campo de búsqueda */
+        .dataTables_filter input {
+            width: 300px;
+            /* Hacer el campo más ancho */
+            font-size: 16px;
+            /* Aumentar el tamaño del texto */
+            margin-right: 8px;
+            padding: 8px 4px;
+            border-radius: 12px;
+            /* Bordes redondeados */
+            border: 1px solid #ccc;
+            /* Borde suave */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            /* Efecto sutil */
         }
     </style>
 </head>
