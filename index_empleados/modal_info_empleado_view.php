@@ -85,6 +85,7 @@ if (isset($_POST['empleado'])) {
                                 <option value="" disabled selected>Selecciona un tipo de empleado</option>
                                 <option value="1" <?php echo ($tipo_empleado == 1) ? 'selected' : ''; ?>>Técnico</option>
                                 <option value="2" <?php echo ($tipo_empleado == 2) ? 'selected' : ''; ?>>Recepcionista</option>
+                                <option value="3" <?php echo ($tipo_empleado == 4) ? 'selected' : ''; ?>>Medico</option>   
                                 <option value="3" <?php echo ($tipo_empleado == 3) ? 'selected' : ''; ?>>Admin</option>                        
                             </select>                             
                         </div>
