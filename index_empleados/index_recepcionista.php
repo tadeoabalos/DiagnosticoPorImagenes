@@ -274,19 +274,52 @@ include '../conexion.php';
     </div>
 
     <script>
-        const btnYaTieneUsuario = document.getElementById('btnYaTieneUsuario');
-        const btnNoTieneUsuario = document.getElementById('btnNoTieneUsuario');
-        const formYaTieneUsuario = document.getElementById('formYaTieneUsuario');
-        const formNoTieneUsuario = document.getElementById('formNoTieneUsuario');
+        $(document).ready(function() {
+            // Inicializar el estado por defecto
+            function initializeModal() {
+                // Mostrar 'Ya tiene Usuario' por defecto y aplicar el estilo al botón correspondiente
+                $('#formYaTieneUsuario').removeClass('d-none');
+                $('#formNoTieneUsuario').addClass('d-none');
+                $('#btnYaTieneUsuario').removeClass('btn-outline-primary').addClass('btn-primary'); // Resaltar el botón "Ya tiene usuario"
 
-        btnYaTieneUsuario.addEventListener('click', () => {
-            formYaTieneUsuario.classList.remove('d-none');
-            formNoTieneUsuario.classList.add('d-none');
-        });
+                // Restablecer los formularios y botones cuando el modal se muestra
+                $('#iframeModal').on('show.bs.modal', function() {
+                    initializeModal();
+                });
 
-        btnNoTieneUsuario.addEventListener('click', () => {
-            formNoTieneUsuario.classList.remove('d-none');
-            formYaTieneUsuario.classList.add('d-none');
+                // Al hacer clic en el botón "Ya tiene usuario"
+                $('#btnYaTieneUsuario').click(function() {
+                    $('#formYaTieneUsuario').removeClass('d-none');
+                    $('#formNoTieneUsuario').addClass('d-none');
+                    // Cambiar el estilo de los botones
+                    $('#btnYaTieneUsuario').removeClass('btn-outline-primary').addClass('btn-primary');
+                    $('#btnNoTieneUsuario').removeClass('btn-secondary').addClass('btn-outline-secondary'); // Volver el otro botón a su estado normal
+                });
+
+                // Al hacer clic en el botón "No tiene usuario"
+                $('#btnNoTieneUsuario').click(function() {
+                    $('#formYaTieneUsuario').addClass('d-none');
+                    $('#formNoTieneUsuario').removeClass('d-none');
+                    // Cambiar el estilo de los botones
+                    $('#btnYaTieneUsuario').removeClass('btn-primary').addClass('btn-outline-primary'); // Volver el otro botón a su estado normal
+                    $('#btnNoTieneUsuario').removeClass('btn-outline-secondary').addClass('btn-secondary'); // Resaltar el botón "No tiene usuario"
+                });
+            }
+
+            // Inicializar al cargar la página
+            initializeModal();
+
+            // Resetear formularios y botones cuando se cierra el modal
+            $('#iframeModal').on('hidden.bs.modal', function() {
+                $('#formYaTieneUsuario')[0].reset();
+                $('#formNoTieneUsuario')[0].reset();
+
+                $('#formYaTieneUsuario').addClass('d-none');
+                $('#formNoTieneUsuario').addClass('d-none');
+
+                $('#btnYaTieneUsuario').removeClass('btn-primary').addClass('btn-outline-primary');
+                $('#btnNoTieneUsuario').removeClass('btn-secondary').addClass('btn-outline-secondary');
+            });
         });
     </script>
 
