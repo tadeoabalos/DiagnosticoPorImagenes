@@ -22,6 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else if ($empleado == 2) {
         // Empezar desde 200 para tipo 2 (Recepcionista)
         $sqlLegajo = "SELECT COALESCE(MAX(legajo), 199) + 1 AS nuevo_legajo FROM empleado WHERE tipo_empleado = 2";
+    } else if ($empleado == 4) {
+        // Empezar desde 200 para tipo 2 (Recepcionista)
+        $sqlLegajo = "SELECT COALESCE(MAX(legajo), 299) + 1 AS nuevo_legajo FROM empleado WHERE tipo_empleado = 4";
     }
 
     $stmtLegajo = $pdo->query($sqlLegajo);
