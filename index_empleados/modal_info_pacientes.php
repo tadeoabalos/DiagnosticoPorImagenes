@@ -107,45 +107,21 @@ input[readonly]:focus {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="fecha_turno" class="form-label">Fecha del Turno</label>
-                            <input type="text" class="form-control" id="fecha_turno" name="fecha_turno" value="<?php echo htmlspecialchars($fecha_turno); ?>">
+                            <input type="text" class="form-control" id="fecha_turno" name="fecha_turno" value="<?php echo htmlspecialchars($fecha_turno); ?>"  readonly>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="hora_turno" class="form-label">Hora del Turno</label>
-                            <input type="text" class="form-control" id="hora_turno" name="hora_turno" value="<?php echo htmlspecialchars($hora_turno); ?>">
+                            <input type="text" class="form-control" id="hora_turno" name="hora_turno" value="<?php echo htmlspecialchars($hora_turno); ?>" readonly>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <?php if($action === 'recepcion'): ?>
-                <button type="submit" class="btn btn-primary" id="saveTurnoBtn" form="edit-turno-form">Guardar</button>
-                <button type="button" class="btn btn-danger" id="deleteTurnoBtn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Eliminar</button>
-                <?php endif; ?>
-                <script> 
-                $('#fecha_turno').prop('readonly', true);
-                $('#hora_turno').prop('readonly', true);
-                </script>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar eliminación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este turno?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
