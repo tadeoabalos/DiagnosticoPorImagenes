@@ -53,6 +53,7 @@ include '../utils/header.php';
                             <option hidden value="0">Seleccione un tipo de empleado</option>
                             <option value="1">Técnico</option>
                             <option value="2">Recepcionista</option>
+                            <option value="4">Medico</option>
                             <option value="3">Admin</option>
                         </select>
                     </div>
@@ -72,7 +73,7 @@ include '../utils/header.php';
         $('#tipo-empleado').change(function() {
             const tipoEmpleado = $(this).val();
 
-            if (tipoEmpleado != '0') {
+            if (tipoEmpleado != '0' && tipoEmpleado != '4') {
                 $.ajax({
                     url: './obtener_formulario.php',
                     type: 'POST',
@@ -91,7 +92,7 @@ include '../utils/header.php';
             }
         });
     </script>
-
+    
 </body>
 
 </html>
