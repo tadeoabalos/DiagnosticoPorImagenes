@@ -140,11 +140,12 @@ $resultado = mysqli_query($conexion, $sql);
                         <th style="vertical-align: middle;" class="text-center"><strong>Especialidad</strong></th>
                         <th style="vertical-align: middle;" class="text-center"><strong>Fecha</strong></th>
                         <th style="vertical-align: middle;" class="text-center"><strong>Hora</strong></th>
+                        <th style="vertical-align: middle;" class="text-center"><strong>Estado</strong></th>
                     </tr>
                 </thead>
                 <tbody id="tbody_turnos">
                     <?php
-                    $stmt = $pdo->prepare("SELECT tp.id, tp.fecha, tp.hora, p.*, e.nombre AS especialidad 
+                    $stmt = $pdo->prepare("SELECT tp.id, tp.fecha, tp.hora, tp.estado, p.*, e.nombre AS especialidad 
                            FROM turnos_pacientes tp 
                            JOIN paciente p ON p.id_paciente = tp.id_paciente 
                            JOIN especializacion e ON e.id_especializacion = tp.id_especializacion 
@@ -153,6 +154,8 @@ $resultado = mysqli_query($conexion, $sql);
 
                     if ($stmt->rowCount() > 0) {
                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            $estado = htmlspecialchars($row['estado']);
+                            $estadoClass = ($estado == 'Cancelado') ? 'text-danger' : '';
                             echo "<tr>";
                             echo "<td class='text-center'><a class='btn btn-sm btn-outline-primary' id='view_turno' data-id_paciente='" . $row['id_paciente'] . "' data-id='" . $row['id'] . "'>
                             <i class='fas fa-eye'></i></a></td>";
@@ -160,6 +163,7 @@ $resultado = mysqli_query($conexion, $sql);
                             echo "<td  style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['especialidad']) . "</td>";
                             echo "<td  style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['fecha']) . "</td>";
                             echo "<td  style='vertical-align: middle;' class='text-center'>" . htmlspecialchars($row['hora']) . "</td>";
+                            echo "<td style='vertical-align: middle;' class='text-center " . $estadoClass . "'>" . $estado . "</td>";
                             echo "</tr>";
                         }
                     } else {
