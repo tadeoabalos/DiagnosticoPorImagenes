@@ -149,12 +149,12 @@ if ($action == 'mail_alta_paciente') {
         // Obtiene el nombre completo y correo del paciente
         $nombre_completo = $row['nombre'] . ' ' . $row['apellido'];
         $correo_paciente = $row['correo']; // Correo del paciente
-        
-        $stmtEspecialidad = $pdo->prepare("SELECT nombre FROM especializacion WHERE id_especializacion = ?");
-    $stmtEspecialidad->execute([$id_especializacion]);
-    $rowEspecialidad = $stmtEspecialidad->fetch(PDO::FETCH_ASSOC);
 
-    $nombre_especialidad = $rowEspecialidad['nombre'];
+        $stmtEspecialidad = $pdo->prepare("SELECT nombre FROM especializacion WHERE id_especializacion = ?");
+        $stmtEspecialidad->execute([$id_especializacion]);
+        $rowEspecialidad = $stmtEspecialidad->fetch(PDO::FETCH_ASSOC);
+
+        $nombre_especialidad = $rowEspecialidad['nombre'];
 
         // Configuración de PHPMailer
         $mail->isSMTP();
@@ -259,21 +259,6 @@ if ($action == 'mail_alta_paciente') {
         $nombre_completo = $row['nombre'] . ' ' . $row['apellido'];
         $correo_paciente = $row['correo']; // Correo del paciente
 
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'kevinaeze@gmail.com'; // Tu correo
-        $mail->Password   = 'wquy abtp zxqf ojaz'; // Tu contraseña o contraseña de aplicación
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Usar STARTTLS
-        $mail->Port       = 587; // Puerto para STARTTLS
-
-        // Remitente y destinatario
-        $mail->setFrom('kevinaeze@gmail.com', 'Consultorio Radiologico ');
-        $mail->addAddress($correo_paciente, 'Paciente'); // Correo del paciente
-
-        // Datos del formulario
-        $nota = htmlspecialchars($_POST['nota']);
-
         // Verificar si el archivo se ha cargado correctamente
         if ($_FILES['file']['error'] != UPLOAD_ERR_OK) {
             throw new Exception('Error al cargar el archivo.');
@@ -285,87 +270,62 @@ if ($action == 'mail_alta_paciente') {
             throw new Exception('El archivo debe ser JPG, PNG o PDF.');
         }
 
-        // Adjuntar el archivo
-        $upload_file = $_FILES['file']['tmp_name'];
-        $file_name = $_FILES['file']['name'];
-        $mail->addAttachment($upload_file, $file_name);
+        // Directorio donde se guardarán los archivos
+        $upload_dir = '../uploads/radiografias/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);  // Crear el directorio si no existe
+        }
 
-        // Contenido del correo
+        // Mover el archivo a la carpeta de destino
+        $upload_file = $upload_dir . basename($_FILES['file']['name']);
+        if (!move_uploaded_file($_FILES['file']['tmp_name'], $upload_file)) {
+            throw new Exception('Error al guardar el archivo en el servidor.');
+        }
+
+        // Insertar los datos en la base de datos
+        $stmt = $pdo->prepare("INSERT INTO radiografias (id_paciente, archivo, nota, fecha_subida) VALUES (?, ?, ?, NOW())");
+        $stmt->execute([$id_paciente, $upload_file, htmlspecialchars($_POST['nota'])]);
+
+
+        // Configuración del correo
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'kevinaeze@gmail.com'; // Tu correo
+        $mail->Password   = 'wquy abtp zxqf ojaz'; // Tu contraseña o contraseña de aplicación
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Usar STARTTLS
+        $mail->Port       = 587; // Puerto para STARTTLS
+
+        // Remitente y destinatario
+        $mail->setFrom('kevinaeze@gmail.com', 'Consultorio Radiologico');
+        $mail->addAddress($correo_paciente, 'Paciente');
+
+        // Datos del correo
+        $nota = htmlspecialchars($_POST['nota']);
         $mail->isHTML(true);
         $mail->CharSet = 'UTF-8';
         $mail->Subject = 'Nuevo archivo de radiología';
-        $mail->Body = '
-<html>
-<head>
-    <meta charset="UTF-8">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #212529;
-            padding: 20px;
-        }
-        .email-container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin: auto;
-            max-width: 600px;
-            border: 2px solid #007bff;
-        }
-        .email-header {
-            color: #007bff;
-            text-align: center;
-        }
-        .email-note {
-            background-color: #e9f7ff;
-            border-left: 5px solid #007bff;
-            padding: 15px;
-            margin: 20px 0;
-            font-style: italic;
-        }
-        .email-footer {
-            font-size: 12px;
-            text-align: center;
-            color: #6c757d;
-            margin-top: 30px;
-        }
-    </style>
-</head>
-<body>
-    <div class="email-container">
-        <h1 class="email-header">Confirmación de subida de su estudio</h1>
-        <p>Estimado/a <strong>' . $nombre_completo . '</strong>,</p>
-        <p>Nos complace informarle el envío de su estudio. Adjunto a este correo encontrará el archivo correspondiente.</p>';
-
-        if (!empty($nota)) {
-            $mail->Body .= '
-            <div class="email-note">
-                <strong>Nota importante:</strong> ' . $nota . '
-            </div>';
-        }
-
-        $mail->Body .= '
-            <p>Para cualquier consulta adicional, no dude en ponerse en contacto con nosotros. Estamos a su disposición para ayudarle con cualquier duda que pueda tener.</p>
-            <p>Gracias por confiar en nuestros servicios.</p>
-            <div class="email-footer">
-                <p>Consultorio Radiológico | Todos los derechos reservados</p>
-            </div>
-        </div>
+        $mail->Body = "
+    <html>
+    <body>
+        <p>Estimado/a $nombre_completo,</p>
+        <p>Nos complace informarle que su estudio ha sido recibido correctamente.</p>
+        " . (!empty($nota) ? "<p><strong>Nota:</strong> $nota</p>" : "") . "
+        <p>Gracias por confiar en nuestros servicios.</p>
     </body>
-</html>
-';
-
-        $mail->AltBody = "Estimado/a $nombre_completo,\n\nNos complace informarle que su estudio ha sido recibido correctamente. El archivo correspondiente se encuentra adjunto.\n\n" . (empty($nota) ? '' : "Nota: $nota") . "\n\nGracias por utilizar nuestros servicios.";
+    </html>
+";
+        $mail->AltBody = "Estimado/a $nombre_completo,\n\nNos complace informarle que su estudio ha sido recibido correctamente.\n\n" . (empty($nota) ? '' : "Nota: $nota") . "\n\nGracias por utilizar nuestros servicios.";
 
         $mail->send();
+
         echo 'Correo enviado correctamente.';
         header('Location: ../index_empleados/index_radiologo.php?mensaje=subida_exitosa');
         exit;
     } catch (Exception $e) {
-        echo "Error al enviar el correo: {$mail->ErrorInfo}";
+        echo "Error: {$e->getMessage()}";
         header('Location: ../index_empleados/index_radiologo.php?mensaje=subida_erronea');
         exit;
     }
 }
+
